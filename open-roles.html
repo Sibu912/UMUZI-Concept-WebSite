@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>UMUZI // OPEN ROLES</title>
+  <link rel="icon" type="image/svg+xml" href="assets/Images/UMUZI_Logo.svg">
+  <meta content="Collaborate with global partners to create learning-to-earning pathways." name="description">
+
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+  <style>
+    /* ── RESET & ROOT ─────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --cyan:     #00f5ff;
+      --magenta:  #ff00cc;
+      --green:    #00ff88;
+      --navy:     #000d1a;
+      --black:    #00060f;
+      --border-c: rgba(0, 245, 255, 0.35);
+      --border-m: rgba(255, 0, 204, 0.35);
+      --border-g: rgba(0, 255, 136, 0.35);
+      --glow-c:   0 0 8px #00f5ff, 0 0 20px rgba(0,245,255,0.4), 0 0 40px rgba(0,245,255,0.15);
+      --glow-m:   0 0 8px #ff00cc, 0 0 20px rgba(255,0,204,0.4);
+      --glow-g:   0 0 8px #00ff88, 0 0 20px rgba(0,255,136,0.4);
+      --mono:     'Share Tech Mono', monospace;
+      --orb:      'Orbitron', sans-serif;
+      --jet:      'JetBrains Mono', monospace;
+      --nav-h:    64px;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--mono); color: #fff;
+      background: var(--black);
+      overflow-x: hidden;
+    }
+    
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; padding: 0; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
+
+    /* ══ IFRAME BACKGROUND ═══════════════════════════════════════ */
+    .bg-iframe {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      border: none; z-index: 0; pointer-events: none;
+    }
+
+    /* General Background Grid */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      animation: scanMove 8s linear infinite;
+    }
+    @keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+    /* ══ ANIMATIONS ═══════════════════════════════════════════════ */
+    @keyframes loadUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-anim { opacity: 0; animation: loadUp 0.8s var(--ease-out) forwards; }
+    .hero-anim:nth-child(1) { animation-delay: 0.1s; }
+    .hero-anim:nth-child(2) { animation-delay: 0.3s; }
+    .hero-anim:nth-child(3) { animation-delay: 0.5s; }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .reveal.scroll-out { opacity: 0; transform: translateY(-40px); }
+
+    .hover-float { transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); display: inline-flex; align-items: center; gap: 8px; }
+    .hover-float:hover { transform: translateY(-5px); }
+    .hover-float i { transition: transform 0.4s var(--ease-out); }
+    .hover-float:hover i { transform: translateX(4px) translateY(-2px); }
+
+    /* ══ NAVBAR ═══════════════════════════════════════════════════ */
+    .main-nav {
+      position: fixed; top: 12px; left: 12px; right: 12px; height: var(--nav-h); z-index: 999;
+      background: linear-gradient(180deg, rgba(0,6,15,0.95) 0%, rgba(0,6,15,0.7) 100%);
+      border-bottom: 1px solid var(--border-c); box-shadow: 0 1px 0 rgba(0,245,255,0.6), 0 4px 30px rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px); clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 0px));
+      display: flex; align-items: center; pointer-events: auto; transition: clip-path 0.2s ease;
+    }
+    .main-nav.menu-open { clip-path: none !important; }
+    .main-nav::before {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent); animation: navScan 4s linear infinite;
+    }
+    @keyframes navScan { to { left: 200%; } }
+    .nav-ticker { position: absolute; top: -1px; left: 120px; right: 120px; height: 2px; overflow: hidden; }
+    .nav-ticker-inner {
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--green), transparent); animation: tickerMove 3s linear infinite;
+    }
+    @keyframes tickerMove { to { left: 200%; } }
+
+    .nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-bracket { color: var(--cyan); font-size: 1.4rem; font-weight: 900; text-shadow: var(--glow-c); }
+    .logo-text { font-family: var(--orb); font-size: 1.3rem; font-weight: 900; letter-spacing: 6px; color: #fff; text-shadow: 0 0 10px rgba(0,245,255,0.5), 0 0 30px rgba(0,245,255,0.2); text-transform: uppercase; }
+    
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: flex; align-items: center; gap: 5px; padding: 8px 14px; font-family: var(--mono); font-size: 10px; font-weight: 400;
+      color: rgba(0,245,255,0.5); text-transform: uppercase; letter-spacing: 2px; transition: all 0.25s var(--ease); cursor: pointer; text-decoration: none;
+      position: relative; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); white-space: nowrap;
+    }
+    .nav-links > li > a:hover { color: var(--cyan); background: rgba(0,245,255,0.06); text-shadow: var(--glow-c); }
+    .nav-links > li > a::after { content: ""; position: absolute; bottom: 0; left: 50%; right: 50%; height: 1px; background: var(--cyan); box-shadow: var(--glow-c); transition: all 0.3s var(--ease); }
+    .nav-links > li > a:hover::after { left: 0; right: 0; }
+
+    .chevron-icon { display: none; }
+    .desktop-prefix { display: inline-block; margin-right: 4px; opacity: 0.7; }
+    .desktop-chevron { display: inline-block; font-size: 8px; margin-left: 5px; transition: transform 0.3s; }
+    .mobile-nav-footer-container { display: none; }
+
+    .nav-ctas { display: flex; align-items: center; gap: 10px; }
+    .btn-hud {
+      padding: 7px 20px; font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; cursor: pointer;
+      transition: all 0.25s var(--ease); position: relative; border: none; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-hud.outline { background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan); box-shadow: inset 0 0 10px rgba(0,245,255,0.05), var(--glow-c); }
+    .btn-hud.outline:hover { background: rgba(0,245,255,0.12); box-shadow: inset 0 0 20px rgba(0,245,255,0.1), var(--glow-c); }
+    .btn-hud.filled { background: var(--cyan); color: #000; font-weight: 900; box-shadow: var(--glow-c); }
+    .btn-hud.filled:hover { background: #fff; box-shadow: 0 0 20px #fff, 0 0 40px rgba(0,245,255,0.5); }
+    .mobile-toggle { display: none; background: none; border: 1px solid var(--border-c); color: var(--cyan); padding: 6px 10px; font-size: 1.4rem; cursor: pointer; }
+
+    /* ══ MEGA MENUS ═══════════════════════════════════════════════ */
+    .mega-menu {
+      position: fixed; top: calc(12px + var(--nav-h)); left: 12px; right: 12px;
+      background: linear-gradient(160deg, rgba(0,8,20,0.97) 0%, rgba(0,3,10,0.99) 100%);
+      border: 1px solid var(--border-c); border-top: 2px solid var(--cyan);
+      box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 20px 60px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,245,255,0.02);
+      opacity: 0; visibility: hidden; transform: translateY(-8px) scaleY(0.97); transition: all 0.3s var(--ease); z-index: 998; padding: 32px 40px; pointer-events: none; backdrop-filter: blur(20px);
+      background-image: linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px); background-size: 30px 30px;
+    }
+    .mega-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scaleY(1); pointer-events: auto; }
+    .mega-inner { display: grid; grid-template-columns: 260px 1fr; gap: 40px; align-items: start; max-width: 1200px; margin: 0 auto; }
+    .mega-label { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--cyan); margin-bottom: 4px; text-transform: uppercase; }
+    .mega-title { font-family: var(--orb); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,245,255,0.3); }
+    .mega-desc { font-size: 10px; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .mega-cta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9px; color: var(--cyan); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.2s; }
+    .mega-cta:hover { text-shadow: var(--glow-c); gap: 10px; }
+    .mega-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mega-link { padding: 16px 18px; background: rgba(0,245,255,0.02); border: 1px solid rgba(0,245,255,0.12); text-decoration: none; display: block; transition: all 0.25s var(--ease); position: relative; overflow: hidden; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+    .mega-link::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--cyan); box-shadow: var(--glow-c); transform: scaleY(0); transform-origin: top; transition: transform 0.3s var(--ease); }
+    .mega-link:hover { background: rgba(0,245,255,0.06); border-color: rgba(0,245,255,0.3); transform: translateX(4px); }
+    .mega-link:hover::before { transform: scaleY(1); }
+    .mega-link h4 { font-family: var(--mono); font-size: 10px; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px; }
+    .mega-link p { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .mega-link-arr { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 8px; color: rgba(0,245,255,0.5); margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+    @media (min-width: 1101px) { .mobile-sub { display: none !important; } }
+
+    /* ══ MAIN SCROLLING CONTENT ═══════════════════════════════════ */
+    main { position: relative; z-index: 10; padding-top: 120px; padding-bottom: 60px; pointer-events: none; }
+    main * { pointer-events: auto; }
+    section { padding: 60px 0; position: relative; z-index: 10;}
+    .section-heading { font-family: var(--orb); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; letter-spacing: 2px; color: #fff; text-shadow: var(--glow-c); margin-bottom: 16px; line-height: 1.2; text-transform: uppercase; }
+    .section-sub { font-size: 14px; color: rgba(255,255,255,0.7); max-width: 800px; line-height: 1.8; margin-bottom: 32px; letter-spacing: 1px; font-family: var(--jet); }
+    h1, h2, h3, h4 { font-family: var(--orb); text-transform: uppercase; font-weight: 700; }
+
+    .breadcrumbs { font-family: var(--mono); color: var(--cyan); margin-bottom: 24px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+    .breadcrumbs a { transition: 0.2s; }
+    .breadcrumbs a:hover { color: #fff; text-shadow: var(--glow-c); }
+    .breadcrumbs span { color: var(--magenta); margin: 0 8px; }
+
+    .hero { min-height: 80vh; display: flex; align-items: center; position: relative; padding-top: 80px; padding-bottom: 80px; }
+    .hero h1 { font-family: var(--orb); font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 4px; font-weight: 900; margin-bottom: 24px; text-shadow: 0 0 20px rgba(0,245,255,0.5), var(--glow-c); text-transform: uppercase;}
+    .hero p { font-family: var(--jet); font-size: 15px; letter-spacing: 1.5px; color: rgba(255,255,255,0.8); max-width: 700px; line-height: 1.8; margin-bottom: 0;}
+
+    /* ══ COMPACT SCI-FI ROLE CARDS ═════════════════════════════════ */
+    .sci-fi-role-card {
+      position: relative; background: linear-gradient(135deg, rgba(5, 15, 25, 0.85) 0%, rgba(0, 4, 10, 0.95) 100%); border: 1px solid var(--border-c);
+      box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.05), 0 10px 20px rgba(0, 0, 0, 0.5); border-radius: 8px; padding: 35px 20px 20px 20px;
+      display: flex; flex-direction: column; transition: all 0.4s var(--ease-out); text-decoration: none; cursor: pointer;
+      clip-path: polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px);
+    }
+    .sci-fi-role-card.magenta { border-color: var(--border-m); }
+    .sci-fi-role-card.green { border-color: var(--border-g); }
+    .sci-fi-role-card:hover { transform: translateY(-6px); box-shadow: inset 0 0 30px rgba(0, 245, 255, 0.15), 0 15px 30px rgba(0, 245, 255, 0.2); border-color: var(--cyan); }
+    .sci-fi-role-card.magenta:hover { border-color: var(--magenta); box-shadow: inset 0 0 30px rgba(255, 0, 204, 0.15), 0 15px 30px rgba(255, 0, 204, 0.2); }
+    .sci-fi-role-card.green:hover { border-color: var(--green); box-shadow: inset 0 0 30px rgba(0, 255, 136, 0.15), 0 15px 30px rgba(0, 255, 136, 0.2); }
+
+    .card-top-left-hashes { position: absolute; top: 10px; left: 40px; display: flex; gap: 4px; z-index: 2; }
+    .card-top-left-hashes .hash-mark { width: 8px; height: 16px; background: rgba(0, 245, 255, 0.6); transform: skewX(-35deg); box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
+    .sci-fi-role-card.magenta .hash-mark { background: rgba(255, 0, 204, 0.6); }
+    .sci-fi-role-card.green .hash-mark { background: rgba(0, 255, 136, 0.6); }
+
+    .sci-fi-role-card::before { content: ''; position: absolute; inset: 5px; border: 1px solid rgba(0, 245, 255, 0.2); pointer-events: none; clip-path: polygon(28px 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%, 0 28px); }
+    .sci-fi-role-card.magenta::before { border-color: rgba(255, 0, 204, 0.2); }
+    .sci-fi-role-card.green::before { border-color: rgba(0, 255, 136, 0.2); }
+
+    .card-header-area { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+    .card-header-area .micro-left { font-family: var(--mono); font-size: 7px; color: rgba(0, 245, 255, 0.5); text-transform: uppercase; line-height: 1.4; }
+    .card-title-right { text-align: right; }
+    .card-title-right h3 { font-family: var(--jet); font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px rgba(0, 245, 255, 0.4); margin: 0; letter-spacing: -0.5px; }
+    .card-title-right .micro-right { font-family: var(--mono); font-size: 8px; color: rgba(0, 245, 255, 0.5); margin-top: 4px; text-transform: uppercase; }
+
+    .sci-fi-role-card p.desc { font-family: var(--jet); font-size: 13px; color: rgba(255, 255, 255, 0.8); line-height: 1.6; font-weight: 400; flex-grow: 1; margin-bottom: 30px; }
+
+    .card-footer-area { display: flex; justify-content: space-between; align-items: flex-end; }
+    .card-location { font-family: var(--jet); font-size: 1.2rem; font-weight: 700; color: var(--cyan); text-shadow: 0 0 8px rgba(0, 245, 255, 0.3); text-transform: uppercase; }
+    .sci-fi-role-card.magenta .card-location { color: var(--magenta); text-shadow: 0 0 8px rgba(255, 0, 204, 0.3); }
+    .sci-fi-role-card.green .card-location { color: var(--green); text-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    
+    .job-role-tag { position: absolute; top: -42px; right: 25px; border: 1px solid var(--cyan); background: rgba(0, 10, 20, 0.95); padding: 8px 12px; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 0 8px rgba(0, 245, 255, 0.1); z-index: 2; }
+    .sci-fi-role-card.magenta .job-role-tag { border-color: var(--magenta); box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 0 8px rgba(255, 0, 204, 0.1); }
+    .sci-fi-role-card.green .job-role-tag { border-color: var(--green); box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 0 8px rgba(0, 255, 136, 0.1); }
+    
+    .job-role-tag h4 { font-family: var(--orb); font-size: 12px; color: #fff; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .job-role-tag .fake-bars { width: 70px; height: 6px; background: repeating-linear-gradient(90deg, var(--cyan), var(--cyan) 2px, transparent 2px, transparent 4px); margin-bottom: 3px; opacity: 0.7; border: 1px solid rgba(0, 245, 255, 0.2); }
+    .sci-fi-role-card.magenta .fake-bars { background: repeating-linear-gradient(90deg, var(--magenta), var(--magenta) 2px, transparent 2px, transparent 4px); border-color: rgba(255, 0, 204, 0.2); }
+    .sci-fi-role-card.green .fake-bars { background: repeating-linear-gradient(90deg, var(--green), var(--green) 2px, transparent 2px, transparent 4px); border-color: rgba(0, 255, 136, 0.2); }
+    
+    .wire-conn { position: absolute; top: -20px; right: 50px; width: 3px; height: 25px; background: var(--cyan); box-shadow: 0 0 5px var(--cyan); }
+    .sci-fi-role-card.magenta .wire-conn { background: var(--magenta); box-shadow: 0 0 5px var(--magenta); }
+    .sci-fi-role-card.green .wire-conn { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .wire-conn::after { content: ''; position: absolute; bottom: -8px; left: -5px; width: 13px; height: 13px; border-radius: 50%; background: #000; border: 2px solid var(--cyan); box-shadow: inset 0 0 4px #000; }
+    .sci-fi-role-card.magenta .wire-conn::after { border-color: var(--magenta); }
+    .sci-fi-role-card.green .wire-conn::after { border-color: var(--green); }
+
+    .arrow-box { border: 2px solid var(--green); background: #051410; padding: 15px 30px; display: flex; align-items: center; gap: 6px; clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px); box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.3), 0 5px 15px rgba(0,0,0,0.6); position: relative; transform: scale(0.65); transform-origin: bottom right; margin: -20px -20px -20px 0; }
+    .arrow-box::after { content: '.. ::: // 000000000'; position: absolute; bottom: 4px; right: 20px; font-family: var(--mono); color: var(--green); font-size: 8px; opacity: 0.6; }
+    .arrow-icon { width: 25px; height: 25px; border-top: 6px solid var(--green); border-right: 6px solid var(--green); transform: rotate(45deg); margin-left: -8px; opacity: 0.2; }
+    .sci-fi-role-card:hover .arrow-icon { animation: pulse-arrow 1.2s infinite ease-in-out; }
+    .sci-fi-role-card:hover .arrow-icon:nth-child(1) { animation-delay: 0.0s; }
+    .sci-fi-role-card:hover .arrow-icon:nth-child(2) { animation-delay: 0.15s; }
+    .sci-fi-role-card:hover .arrow-icon:nth-child(3) { animation-delay: 0.3s; }
+    .sci-fi-role-card:hover .arrow-icon:nth-child(4) { animation-delay: 0.45s; }
+    .sci-fi-role-card:hover .arrow-icon:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes pulse-arrow {
+        0%, 100% { opacity: 0.2; filter: drop-shadow(0 0 0px var(--green)); transform: rotate(45deg) translate(0,0); }
+        50% { opacity: 1; filter: drop-shadow(0 0 12px var(--green)); transform: rotate(45deg) translate(4px, -4px); }
+    }
+
+    /* Bottom Overlay Cards */
+    .cyber-image-frame-btm { width: 100%; min-height: 300px; background: rgba(0, 245, 255, 0.05); border: 1px solid var(--border-c); box-shadow: inset 0 0 30px rgba(0, 245, 255, 0.1); clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: all 0.4s var(--ease-out); }
+    .image-overlay-card { position: relative; height: 100%; display: block; cursor: pointer; text-decoration: none;}
+    .image-overlay-card:hover .cyber-image-frame-btm { border-color: var(--cyan); box-shadow: inset 0 0 40px rgba(0,245,255,0.2), var(--glow-c); transform: scale(1.02); }
+    .image-overlay-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 24px 24px; background: linear-gradient(to top, rgba(0,5,15,0.95), transparent); z-index: 2; transition: transform 0.4s var(--ease-out); }
+    .image-overlay-card:hover .image-overlay-content { transform: translateY(-5px); }
+    .image-overlay-content h3 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; text-shadow: var(--glow-c); display: flex; justify-content: space-between; align-items: center; }
+    .image-overlay-card .bi-arrow-up-right { transition: transform 0.4s var(--ease-out); display: inline-block; font-size: 1.2rem; }
+    .image-overlay-card:hover .bi-arrow-up-right { transform: rotate(45deg); color: #fff; text-shadow: 0 0 10px #fff; }
+
+    /* ══ CYBER MODAL (EXPANDING SCREEN) ════════════════════════════ */
+    .cyber-modal {
+      position: fixed; inset: 0; z-index: 9999; background: rgba(0, 5, 12, 0.9); backdrop-filter: blur(12px);
+      display: flex; justify-content: center; align-items: flex-start; opacity: 0; visibility: hidden; transition: all 0.4s var(--ease);
+      overflow-y: auto; padding: 40px 20px; pointer-events: none;
+    }
+    .cyber-modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    .cyber-modal-content {
+      background: var(--navy); border: 1px solid var(--border-c); box-shadow: 0 0 30px rgba(0,245,255,0.1), inset 0 0 20px rgba(0,245,255,0.05);
+      max-width: 900px; width: 100%; position: relative; margin: auto; padding: 40px; clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+      transform: translateY(30px) scale(0.98); transition: all 0.4s var(--ease-out);
+    }
+    .cyber-modal.active .cyber-modal-content { transform: translateY(0) scale(1); }
+    
+    .modal-close {
+      position: absolute; top: 20px; right: 20px; background: rgba(255,0,204,0.1); border: 1px solid var(--border-m); color: var(--magenta); width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; transition: all 0.3s; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .modal-close:hover { background: var(--magenta); color: #fff; box-shadow: var(--glow-m); transform: rotate(90deg); }
+
+    .modal-title { font-family: var(--orb); font-size: clamp(1.8rem, 4vw, 2.5rem); color: #fff; text-shadow: var(--glow-c); margin-bottom: 10px; text-transform: uppercase; line-height: 1.2; padding-right: 40px; }
+    .modal-meta { font-family: var(--mono); font-size: 12px; color: var(--cyan); margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; }
+    .modal-image-frame { min-height: 350px; margin-bottom: 30px; border-color: var(--cyan); box-shadow: inset 0 0 40px rgba(0,245,255,0.1); position: relative; overflow: hidden; border-radius: 4px; display: none;}
+    .modal-image-frame img, .modal-image-frame video { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; }
+    
+    .modal-body-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 15px; color: #d0d0d0; line-height: 1.8; margin-bottom: 40px; }
+    .modal-body-text p { margin-bottom: 20px; }
+    .modal-body-text ul { list-style: disc; padding-left: 20px; margin-bottom: 20px; color: rgba(255,255,255,0.8); }
+    .modal-body-text li { margin-bottom: 8px; }
+    .modal-body-text blockquote { border-left: 3px solid var(--magenta); padding-left: 16px; margin: 20px 0; font-style: italic; color: #fff; background: rgba(255,0,204,0.05); padding-top: 10px; padding-bottom: 10px; }
+    .modal-body-text h4 { font-family: var(--orb); color: var(--cyan); margin: 30px 0 15px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;}
+
+    .modal-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; }
+    .modal-action-card {
+      background: rgba(0,245,255,0.03); border: 1px solid var(--border-c); padding: 20px; text-align: center; text-decoration: none; color: #fff;
+      transition: all 0.3s; clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 120px; position: relative; overflow: hidden;
+    }
+    .modal-action-card h4 { font-family: var(--orb); font-size: 1.2rem; margin-bottom: 0; position: relative; z-index: 2; text-transform: uppercase; letter-spacing: 2px; }
+    .modal-action-card i { position: absolute; right: 15px; bottom: 15px; font-size: 1.2rem; color: var(--cyan); opacity: 0; transition: 0.3s; z-index: 2; }
+    .modal-action-card:hover { background: rgba(0,245,255,0.1); border-color: var(--cyan); transform: translateY(-5px); box-shadow: var(--glow-c); }
+    .modal-action-card:hover i { opacity: 1; }
+    .modal-action-card.partner { border-color: var(--green); }
+    .modal-action-card.partner:hover { background: rgba(0,255,136,0.1); box-shadow: var(--glow-g); }
+    .modal-action-card.partner i { color: var(--green); }
+    .modal-action-card.donate { border-color: var(--magenta); }
+    .modal-action-card.donate:hover { background: rgba(255,0,204,0.1); box-shadow: var(--glow-m); }
+    .modal-action-card.donate i { color: var(--magenta); }
+
+    /* ══ FOOTER / CYBER-FOOTER ════════════════════════════════════ */
+    .cyber-footer {
+      position: relative; margin: 40px 12px 12px 12px; z-index: 15; pointer-events: auto;
+      background: linear-gradient(180deg, rgba(0,8,20,0.55) 0%, rgba(0,4,12,0.92) 100%); border-top: 1px solid var(--border-c); backdrop-filter: blur(16px); padding: 22px 36px 10px 36px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%, 0 24px); box-shadow: 0 -1px 0 rgba(0,245,255,0.5), inset 0 0 40px rgba(0,0,0,0.6);
+    }
+    .cyber-footer::before, .cyber-footer::after { content: ""; position: absolute; top: 0; width: 36px; height: 36px; border-top: 2px solid var(--cyan); box-shadow: var(--glow-c); pointer-events: none; }
+    .cyber-footer::before { left: 24px; border-left: 2px solid var(--cyan); }
+    .cyber-footer::after  { right: 24px; border-right: 2px solid var(--cyan); }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .f-nav-col { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
+    .f-nav-col.right { align-items: flex-end; }
+    .f-link { font-family: var(--mono); font-size: 9px; font-weight: 700; color: rgba(0,245,255,0.4); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.25s var(--ease); position: relative; display: inline-flex; align-items: center; gap: 5px; }
+    .f-link::before { content: "//"; color: var(--cyan); opacity: 0; transition: all 0.2s; font-size: 8px; }
+    .f-link:hover { color: var(--cyan); text-shadow: var(--glow-c); transform: translateX(3px); }
+    .f-nav-col.right .f-link:hover { transform: translateX(-3px); }
+    .f-link:hover::before { opacity: 1; }
+    .f-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo { font-family: var(--orb); font-size: 2rem; font-weight: 900; letter-spacing: 12px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.3), var(--glow-c); line-height: 1; }
+    .footer-logo-sub { font-family: var(--mono); font-size: 7px; letter-spacing: 6px; color: rgba(0,245,255,0.4); text-transform: uppercase; margin-top: -4px; }
+    .social-row { display: flex; gap: 10px; }
+    .s-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; font-size: 12px; text-decoration: none; border: 1px solid rgba(0,245,255,0.2); color: rgba(0,245,255,0.4); background: rgba(0,245,255,0.03); transition: all 0.25s var(--ease); clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%); }
+    .s-icon:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); transform: scale(1.1) rotate(15deg); }
+    .f-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), var(--cyan), rgba(0,245,255,0.15), transparent); margin-bottom: 10px; position: relative; }
+    .f-divider::after { content: "◆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--cyan); font-size: 8px; text-shadow: var(--glow-c); background: var(--black); padding: 0 6px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); position: relative; }
+    .f-copy-links { display: flex; gap: 16px; }
+    .f-copy-links a { color: inherit; text-decoration: none; transition: all 0.2s; text-transform: uppercase; }
+    .f-copy-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+    .f-year { color: var(--cyan); font-weight: 700; letter-spacing: 4px; font-size: 9px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .f-credit { text-transform: uppercase; }
+    .f-credit span { color: var(--cyan); font-family: var(--orb); font-size: 9px; letter-spacing: 3px; text-shadow: var(--glow-c); }
+
+    /* Responsive Mobile Media Queries */
+    @media (max-width: 1100px) {
+      .desktop-prefix { display: none; }
+      .desktop-chevron { display: none; }
+      .nav-ctas { display: none; }
+      .mobile-toggle { display: block; }
+      .mega-inner { grid-template-columns: 1fr; }
+      .cyber-footer { padding: 20px 20px 10px; }
+      .footer-top { flex-direction: column; gap: 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .f-nav-col { flex-direction: row; }
+      
+      .nav-links { display: none; position: fixed; top: calc(12px + var(--nav-h)); left: 12px; right: 12px; width: auto; height: auto; max-height: calc(100vh - var(--nav-h) - 30px); background: rgba(0, 6, 15, 0.98); backdrop-filter: blur(20px); border: 1px solid var(--border-c); border-top: 2px solid var(--cyan); box-shadow: 0 20px 60px rgba(0,0,0,0.95); flex-direction: column; padding: 30px 40px; z-index: 999; overflow-y: auto; }
+      .nav-links.active { display: flex; }
+      .nav-links > li { width: 100%; display: flex; flex-direction: column; align-items: stretch; margin: 4px 0; }
+      .chevron-icon { display: inline-block; position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 14px; transition: transform 0.3s var(--ease); }
+      .nav-links > li > a { font-family: var(--orb); font-size: 16px; padding: 12px 0 12px 28px; justify-content: flex-start; border-bottom: none; color: rgba(255, 255, 255, 0.9); letter-spacing: 1px; text-transform: none; clip-path: none; background: transparent; }
+      .nav-links > li > a.no-sub { padding-left: 28px; }
+      .nav-links > li.open > a .chevron-icon { transform: translateY(-50%) rotate(180deg); }
+      .nav-links > li.open > a { color: var(--cyan); text-shadow: var(--glow-c); background: transparent; }
+      .mega-menu { display: none !important; }
+
+      .mobile-sub { display: none; flex-direction: column; background: transparent; margin: 0; padding: 0 0 10px 28px; }
+      .mobile-sub.open { display: flex; animation: dropDown 0.3s ease forwards; }
+      @keyframes dropDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+      .mobile-sub li { width: 100%; display: flex; justify-content: flex-start; margin: 0; }
+      .mobile-sub li a { padding: 8px 0; color: rgba(255, 255, 255, 0.7); font-size: 14px; font-family: var(--orb); text-decoration: none; display: block; width: 100%; text-align: left; text-transform: none; letter-spacing: 1px; border-bottom: none; clip-path: none; }
+      .mobile-sub li a:hover { color: var(--cyan); background: transparent; text-shadow: var(--glow-c); }
+      .mobile-sub li a::after { display: none; }
+
+      .mobile-nav-footer-container { display: block; margin-top: auto; padding-top: 25px; padding-bottom: 10px; }
+      .mobile-nav-divider { height: 1px; background: rgba(255, 255, 255, 0.2); margin-bottom: 25px; border: none; }
+      .mobile-nav-ctas { display: flex; gap: 16px; }
+      .mobile-nav-ctas .btn-hud { padding: 10px 24px; font-size: 12px; }
+      .mobile-nav-ctas a i { margin-left: 6px; }
+    }
+      @media (max-width: 768px) {
+      .cyber-image-frame { min-height: 240px; }
+      .modal-image-frame { min-height: 240px; }
+    }
+
+    /* ══ REVEAL ANIMATIONS ═══════════════════════════════════════ */
+    .reveal-section {
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-section.from-right {
+      transform: translateX(250px);
+    }
+    .reveal-section.from-left {
+      transform: translateX(-250px);
+    }
+    .reveal-section.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ══ ACTION GRID (Apply / Partner / Donate) ═══════════════════ */
+    .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+    .cyber-image-frame { width: 100%; min-height: 350px; background: rgba(0, 245, 255, 0.05); border: 1px solid var(--border-c); box-shadow: inset 0 0 30px rgba(0, 245, 255, 0.1); clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: all 0.3s ease; }
+    .image-overlay-card { position: relative; height: 100%; text-decoration: none; display: block; }
+    .image-overlay-card:hover .cyber-image-frame { border-color: var(--cyan); box-shadow: inset 0 0 40px rgba(0,245,255,0.2), var(--glow-c); transform: scale(1.02); }
+    .image-overlay-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 24px 24px; background: linear-gradient(to top, rgba(0,5,15,0.95), transparent); z-index: 2; }
+    .image-overlay-content h3 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; text-shadow: var(--glow-c); display: flex; justify-content: space-between; align-items: center; }
+    .image-overlay-card .bi-arrow-up-right { transition: transform 0.4s var(--ease-out); display: inline-block; font-size: 1.2rem; }
+    .image-overlay-card:hover .bi-arrow-up-right { transform: rotate(45deg); color: #fff; text-shadow: 0 0 10px #fff; }
+
+</style>
+</head>
+<body>
+
+  <!-- BACKGROUND IFRAME -->
+  <iframe src="BackgroundLogoV1.html" class="bg-iframe" title="Background Logo Animation"></iframe>
+
+        <nav class="main-nav" id="mainNav" style="pointer-events:auto;">
+    <div class="nav-ticker"><div class="nav-ticker-inner"></div></div>
+    <div class="nav-inner">
+      <a href="Landing.html" class="nav-logo hover-float">
+        <span class="logo-bracket">[</span>
+        <div>
+          <div class="logo-text">Umuzi</div>
+        </div>
+        <span class="logo-bracket">]</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <!-- ADDED HOME LINK HERE RIGHT AFTER THE LOGO -->
+        <li><a href="Home.html" class="no-sub"><span class="desktop-prefix">//</span> Home</a></li>
+
+        <li data-mega="who">
+            <a href="who-we-are.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Who We Are <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="our-people.html">Our People</a></li>
+                <li><a href="our-story.html">Our Story</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="open-roles.html">Open Roles</a></li>
+            </ul>
+        </li>
+
+        <li><a href="partner-with-us.html" class="no-sub"><span class="desktop-prefix">//</span> Partner With Us</a></li>
+        <li><a href="our-impact.html" class="no-sub"><span class="desktop-prefix">//</span> Impact</a></li>
+        
+        <li data-mega="community">
+            <a href="community.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Community <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="community.html">Journey With Us</a></li>
+                <li><a href="what-to-expect.html">What to Expect</a></li>
+                <li><a href="types-of-opportunities.html">Types of Opportunities</a></li>
+                <li><a href="apply-now.html">Apply Now</a></li>
+            </ul>
+        </li>
+
+        <li data-mega="involved">
+            <a href="donate.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Get Involved <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="donate.html">Donations</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </li>
+
+        <li data-mega="insights">
+            <a href="insights.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Insights <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="insights.html#thought-leadership">Thought Leadership</a></li>
+                <li><a href="insights.html">Impact Reports</a></li>
+            </ul>
+        </li>
+
+        <li class="mobile-nav-footer-container">
+            <div class="mobile-nav-footer">
+                <hr class="mobile-nav-divider">
+                <div class="mobile-nav-ctas">
+                    <a href="donate.html" class="btn-hud outline">Donate <i class="bi bi-arrow-up-right"></i></a>
+                    <a href="apply-now.html" class="btn-hud filled">Apply <i class="bi bi-arrow-up-right"></i></a>
+                </div>
+            </div>
+        </li>
+      </ul>
+
+      <div class="nav-ctas">
+        <a href="donate.html" class="btn-hud outline hover-float">Donate</a>
+        <a href="apply-now.html" class="btn-hud filled hover-float">Apply Now</a>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle"><i class="bi bi-list"></i></button>
+    </div>
+  </nav>
+
+  <!-- DESKTOP MEGA MENUS -->
+  <div class="mega-menu" id="mega-who">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_01</div>
+        <div class="mega-title">Who We Are</div>
+        <div class="mega-desc">Meet the people, purpose, and philosophy behind Umuzi. A global community enabling human potential through technology.</div>
+        <a href="who-we-are.html" class="mega-cta">Explore Module <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="our-people.html" class="mega-link"><h4>Our People</h4><p>Meet the team building tomorrow.</p><span class="mega-link-arr">Access <i class="bi bi-arrow-right"></i></span></a>
+        <a href="our-story.html" class="mega-link"><h4>Our Story</h4><p>How Umuzi grew from an idea.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="careers.html" class="mega-link"><h4>Careers</h4><p>What it's like to work at Umuzi.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="open-roles.html" class="mega-link"><h4>Open Roles</h4><p>Current positions available now.</p><span class="mega-link-arr">Apply <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-community">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_02</div>
+        <div class="mega-title">Community</div>
+        <div class="mega-desc">Join the Umuzi community. Explore opportunities for young people and discover powerful learning-to-earning journeys.</div>
+        <a href="community.html" class="mega-cta">Join Now <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="community.html" class="mega-link"><h4>Journey With Us</h4><p>Our three-part learning model.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="what-to-expect.html" class="mega-link"><h4>What to Expect</h4><p>A powerful earning journey.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="types-of-opportunities.html" class="mega-link"><h4>Types of Opportunities</h4><p>Diverse high-quality programmes.</p><span class="mega-link-arr">Browse <i class="bi bi-arrow-right"></i></span></a>
+        <a href="apply-now.html" class="mega-link"><h4>Apply Now</h4><p>Join in a few simple steps.</p><span class="mega-link-arr">Start <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-involved">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_03</div>
+        <div class="mega-title">Get Involved</div>
+        <div class="mega-desc">Whether you want to partner, fund, mentor or give-discover how you can play a role in building a more equitable, opportunity-rich future.</div>
+        <a href="donate.html" class="mega-cta">Discover How <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="careers.html" class="mega-link"><h4>Careers</h4><p>Work at Umuzi — explore open roles.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="donate.html" class="mega-link"><h4>Donations</h4><p>Fund specific needs and programmes.</p><span class="mega-link-arr">Donate <i class="bi bi-arrow-right"></i></span></a>
+        <a href="contact.html" class="mega-link"><h4>Contact Us</h4><p>Get in touch with the team.</p><span class="mega-link-arr">Contact <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-insights">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_04</div>
+        <div class="mega-title">Insights</div>
+        <div class="mega-desc">Articles, research, and real-world reflections from the frontlines of education and technology.</div>
+        <a href="insights.html" class="mega-cta">Read All <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="insights.html#thought-leadership" class="mega-link"><h4>Thought Leadership</h4><p>Perspectives from our team.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="insights.html" class="mega-link"><h4>Impact Reports</h4><p>Access our latest reports.</p><span class="mega-link-arr">Download <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" style="background-image: url('assets/Images/open-roles-cover.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+      <div class="container">
+        <div class="breadcrumbs hero-anim">
+          <a href="Home.html">Home</a> <span>/</span> <a href="who-we-are.html">Who We Are</a> <span>/</span> <span>Open Roles</span>
+        </div>
+        <h1 class="hero-anim">Open roles</h1>
+        <p class="hero-anim">If you're passionate about purpose-driven work and want to help shape the future of learning and livelihoods, check out our openings below.</p>
+      </div>
+    </section>
+
+    <!-- ROLE LISTINGS SECTION -->
+    <section class="reveal-section from-right" style="padding: 100px 0;">
+      <div class="container">
+        
+        <!-- DYNAMIC GRID CONTAINER (Mapped to LocalStorage JSON) -->
+        <div id="roles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-bottom: 100px; margin-top: 50px;">
+          <!-- Loaded via JavaScript -->
+        </div>
+
+        <!-- DON'T SEE YOUR ROLE BLOCK -->
+        <div class="reveal" style="text-align: center; max-width: 700px; margin: 0 auto 100px auto; transition-delay: 0.1s;">
+            <h2 class="section-heading" style="text-transform: none; font-size: 2rem;">Don't see your role here?</h2>
+            <p class="section-sub" style="margin: 0 auto 30px auto; font-size: 14px; color: rgba(255,255,255,0.8);">We love great people who love our work. If you believe in what we do and want to contribute, drop us a line. We'd love to hear from you.</p>
+            <a href="contact.html" class="btn-hud hover-float" style="background: #fff; color: #000; border-radius: 20px; clip-path: none; padding: 10px 24px;">Get in Touch <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+
+        <!-- BOTTOM ACTION CARDS -->
+        <div class="action-grid">
+          <a href="apply-now.html" class="image-overlay-card reveal" style="transition-delay: 0.1s;">
+            <div class="cyber-image-frame" style="min-height: 350px; background-image: url('assets/Images/Apply.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3>Apply <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+
+          <a href="partner-with-us.html" class="image-overlay-card reveal" style="transition-delay: 0.2s;">
+            <div class="cyber-image-frame" style="min-height: 350px; border-color: var(--green); box-shadow: inset 0 0 30px rgba(0,255,136,0.1); background-image: url('assets/Images/Partner.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3 style="color: var(--green); text-shadow: var(--glow-g);">Partner <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+
+          <a href="donate.html" class="image-overlay-card reveal" style="transition-delay: 0.3s;">
+            <div class="cyber-image-frame" style="min-height: 350px; border-color: var(--magenta); box-shadow: inset 0 0 30px rgba(255,0,204,0.1); background-image: url('assets/Images/Donate.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3 style="color: var(--magenta); text-shadow: var(--glow-m);">Donate <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- CYBER MODAL OVERLAY (Expanding Screen connected to JSON logic) -->
+  <div class="cyber-modal" id="cyberModal">
+    <div class="cyber-modal-content">
+      <button class="modal-close" id="modalClose"><i class="bi bi-x-lg"></i></button>
+      
+      <h1 class="modal-title" id="modalTitle">ROLE TITLE PLACEHOLDER</h1>
+      <div class="modal-meta">Location: <span id="modalLocation">REMOTE</span> // Dossier: <span id="modalDossier">ID_NULL</span></div>
+      
+      <div class="cyber-image-frame modal-image-frame" id="modalImageContainer" style="display:none;">
+        <!-- Rendered via JS if Role has an image -->
+      </div>
+      
+      <div class="modal-body-text" id="modalBody">
+        <!-- Injected via JS from the Admin Blocks -->
+      </div>
+      
+      <!-- Sci-Fi Action Cards -->
+      <div class="modal-actions">
+        <a href="apply-now.html" class="modal-action-card apply">
+          <h4>Apply Now</h4><i class="bi bi-arrow-up-right"></i>
+        </a>
+        <a href="contact.html" class="modal-action-card partner">
+          <h4>Contact Us</h4><i class="bi bi-arrow-up-right"></i>
+        </a>
+        <a href="donate.html" class="modal-action-card donate">
+          <h4>Donate</h4><i class="bi bi-arrow-up-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CYBER FOOTER -->
+      <footer class="cyber-footer" style="pointer-events:auto;">
+    <div class="footer-top">
+      <div class="f-nav-col">
+        <a href="careers.html" class="f-link" data-text="CAREERS">CAREERS</a>
+        <a href="community.html" class="f-link" data-text="LEARNERS">LEARNERS</a>
+        <a href="who-we-are.html" class="f-link" data-text="ABOUT">ABOUT</a>
+      </div>
+
+      <div class="f-center">
+        <div class="footer-logo hover-float">UMUZI</div>
+        <div class="footer-logo-sub">// Creating learning-to-earning pathways that serve people.</div>
+        <div class="social-row">
+          <a href="#" class="s-icon"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <div class="f-nav-col right">
+        <a href="partner-with-us.html" class="f-link" data-text="PARTNERS">PARTNERS</a>
+        <a href="our-impact.html" class="f-link" data-text="IMPACT">IMPACT</a>
+        <a href="contact.html" class="f-link" data-text="CONTACT">CONTACT</a>
+      </div>
+    </div>
+
+    <div class="f-divider"></div>
+
+    <div class="footer-bottom">
+      <div class="f-copy-links">
+        <a href="privacy-policy.html">Privacy Policy & PAIA</a>
+        <a href="cookie-policy.html">Cookie Settings</a>
+        <a href="privacy-policy.html">Terms</a>
+      </div>
+      <div class="f-year">[2026]</div>
+      <div class="f-credit">Designed by <span>SNM</span></div>
+    </div>
+  </footer>
+
+  <script>
+  'use strict';
+
+  // --- Scroll Reveal Animations ---
+  const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.remove('scroll-out'); entry.target.classList.add('active'); observer.unobserve(entry.target); }
+    });
+  }, observerOptions);
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // --- Glitch Text on Links ---
+  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>';
+  document.querySelectorAll('.f-link').forEach(link => {
+    let iv = null;
+    link.addEventListener('mouseenter', () => {
+      const orig = link.dataset.text || link.textContent;
+      let iter = 0; clearInterval(iv);
+      iv = setInterval(() => {
+        link.textContent = orig.split('').map((ch, i) => i < iter ? orig[i] : CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
+        if (iter >= orig.length) clearInterval(iv); iter += 0.5;
+      }, 28);
+    });
+    link.addEventListener('mouseleave', () => { clearInterval(iv); link.textContent = link.dataset.text || link.textContent; });
+  });
+
+  // --- Mobile Toggle Dropdown Interaction ---
+  const mobileToggleBtn = document.getElementById('mobileToggle');
+  const navLinksMenu = document.getElementById('navLinks');
+  const mainNav = id => document.getElementById(id);
+  
+  if (mobileToggleBtn && navLinksMenu) {
+    mobileToggleBtn.addEventListener('click', () => {
+      navLinksMenu.classList.toggle('active');
+      mainNav('mainNav').classList.toggle('menu-open');
+      const icon = mobileToggleBtn.querySelector('i');
+      if (navLinksMenu.classList.contains('active')) { icon.classList.replace('bi-list', 'bi-x'); } 
+      else { icon.classList.replace('bi-x', 'bi-list'); }
+    });
+  }
+
+  // --- Mobile Sub-menu Accordion Toggle ---
+  document.querySelectorAll('.nav-links > li[data-mega] > a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (window.innerWidth <= 1100) {
+        // Only intercept when the chevron is tapped; otherwise let the link
+        // navigate to its direct destination (who-we-are / community / insights).
+        if (e.target.closest('.chevron-icon') || e.target.closest('.desktop-chevron')) {
+          e.preventDefault();
+          const li = this.parentElement;
+          li.classList.toggle('open');
+          const subMenu = li.querySelector('.mobile-sub');
+          if (subMenu) { subMenu.classList.toggle('open'); }
+        }
+      }
+    });
+  });
+
+  // --- Desktop Mega Menu Setup ---
+  (function() {
+    const triggers = document.querySelectorAll('[data-mega]');
+    const menus = {};
+    document.querySelectorAll('.mega-menu').forEach(m => menus[m.id] = m);
+    let active = null;
+    triggers.forEach(trigger => {
+      const id = 'mega-' + trigger.dataset.mega;
+      const menu = menus[id];
+      if (!menu) return;
+      trigger.addEventListener('mouseenter', () => {
+        if (active && window.innerWidth > 1100) active.classList.remove('open');
+        if (window.innerWidth > 1100) { menu.classList.add('open'); active = menu; }
+      });
+      menu.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 1100) { menu.classList.remove('open'); active = null; }
+      });
+    });
+    document.querySelectorAll('.nav-links > li:not([data-mega]) > a').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        if (active && window.innerWidth > 1100) { active.classList.remove('open'); active = null; }
+      });
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (active) { active.classList.remove('open'); active = null; }
+        if (cyberModal.classList.contains('active')) { closeModal(); }
+      }
+    });
+  })();
+
+  // =================================================================================================
+  // --- LOCALSTORAGE RENDER ENGINE (Reacts Live to ADMIN UPDATE PANEL Changes) ---
+  // =================================================================================================
+
+  const cyberModal = document.getElementById('cyberModal');
+  const modalCloseBtn = document.getElementById('modalClose');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalLocation = document.getElementById('modalLocation');
+  const modalDossier = document.getElementById('modalDossier');
+  const modalBody = document.getElementById('modalBody');
+  const modalImageContainer = document.getElementById('modalImageContainer');
+
+  // Same extraction logic Umuzi's live site uses to embed a shared Google Drive file
+  function getGoogleDriveFileId(url) {
+    if (!url) return null;
+    // Matches the /d/<id>/ segment shared by drive.google.com/file/d/..., and by Slides/Docs/Sheets
+    // share links (docs.google.com/presentation|document|spreadsheets/d/...), not just Drive file links.
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) return match[1];
+    try { return new URL(url).searchParams.get('id'); } catch { return null; }
+  }
+
+  // Renders an inline slide-deck preview for a Google Drive file: iframe + sci-fi (.btn-hud) action buttons.
+  function renderDrivePreview(fileId) {
+    const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    return `<div style="margin: 20px 0;">
+      <iframe src="${previewUrl}" style="width:100%; height:600px; border:1px solid var(--border-c); border-radius:4px;" allow="autoplay"></iframe>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="${previewUrl}" target="_blank" class="btn-hud outline" style="display:inline-flex; align-items:center; gap:8px;"><i class="bi bi-box-arrow-up-right"></i> Open Full Preview</a>
+        <a href="${downloadUrl}" class="btn-hud filled" style="display:inline-flex; align-items:center; gap:8px;"><i class="bi bi-download"></i> Download Report</a>
+      </div>
+    </div>`;
+  }
+
+  function renderContentBlocks(blocks) {
+    if (!blocks || blocks.length === 0) return '<p>No description data available for this role.</p>';
+
+    return blocks.map(block => {
+      if (block.type === 'subheading') return `<h4 style="color: var(--cyan); margin: 30px 0 15px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;">${block.value || ''}</h4>`;
+      if (block.type === 'paragraph') return `<p>${block.value || ''}</p>`;
+      if (block.type === 'quote') return `<blockquote>"${block.value || ''}"</blockquote>`;
+      if (block.type === 'image') return block.url ? `<div style="margin: 20px 0;"><img src="${block.url}" alt="Role Document Visual" style="width:100%; border-radius:4px; border:1px solid var(--border-c);"></div>` : '';
+      if (block.type === 'drive') {
+        const fileId = getGoogleDriveFileId(block.url);
+        return fileId ? renderDrivePreview(fileId) : '';
+      }
+      if (block.type === 'video') return block.url ? `<div style="margin: 20px 0;"><a href="${block.url}" target="_blank" class="btn-hud outline" style="display:inline-flex; align-items:center; gap:8px;"><i class="bi bi-play-circle"></i> Watch Attached Stream</a></div>` : '';
+      if (block.type === 'document') return block.url ? `<div style="margin: 20px 0;"><a href="${block.url}" target="_blank" download="Umuzi_Role_Details" class="btn-hud filled" style="display:inline-flex; align-items:center; gap:8px;"><i class="bi bi-file-earmark-arrow-down"></i> Download / Preview Complete PDF</a></div>` : '';
+      return '';
+    }).join('');
+  }
+
+  // Opens the sci-fi overlay and dynamically maps the exact arrays 
+  window.openRoleModal = function(index) {
+    const items = JSON.parse(localStorage.getItem('umuzi_roles')) || [];
+    const item = items[index];
+    if (!item) return;
+
+    modalTitle.innerText = item.title || 'UNKNOWN ROLE';
+    modalLocation.innerText = item.location || 'N/A';
+    modalDossier.innerText = item.dossier || 'CLASSIFIED';
+    
+    let bodyBlocks = item.blocks ? [...item.blocks] : [];
+    
+    // Extract the very first media element for the Modal Banner Header
+    const firstMediaIndex = bodyBlocks.findIndex(b => b.type === 'image' || b.type === 'video');
+    if (firstMediaIndex !== -1) {
+       const mediaBlock = bodyBlocks[firstMediaIndex];
+       if (mediaBlock.type === 'image') {
+           modalImageContainer.innerHTML = `<img src="${mediaBlock.url}" alt="Post Visual Data" />`;
+       } else if (mediaBlock.type === 'video') {
+           modalImageContainer.innerHTML = `<video src="${mediaBlock.url}" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2;"></video>`;
+       }
+       modalImageContainer.style.display = 'block';
+       bodyBlocks.splice(firstMediaIndex, 1); 
+    } else {
+       modalImageContainer.style.display = 'none';
+       modalImageContainer.innerHTML = '';
+    }
+
+    modalBody.innerHTML = renderContentBlocks(bodyBlocks);
+
+    // Expand Screen
+    cyberModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; 
+  }
+
+  const closeModal = () => { cyberModal.classList.remove('active'); document.body.style.overflow = ''; };
+  modalCloseBtn.addEventListener('click', closeModal);
+  cyberModal.addEventListener('click', (e) => { if(e.target === cyberModal) closeModal(); });
+
+  // DOMContentLoaded: Seed Default Jobs & Build Dynamic Grid
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Seeding datasets directly from provided PDFs
+    const defaultRoles = [
+      { 
+        title: "Learning Experience Lead", location: "Remote", dossier: "SKILLS_LAB_LEAD", variant: "", desc: "The Learning Experience Lead works within the Skills Lab, a space focused on preparing learners for experience opportunities and work placements through high-quality technical and non-technical learning.",
+        blocks: [
+          { type: 'paragraph', value: "The Learning Experience Lead works within the Skills Lab, a space focused on preparing learners for experience opportunities and work placements through high-quality technical and non-technical learning. The role blends learner support, facilitation, programme coordination, and coaching." },
+          { type: 'subheading', value: "Qualities + Expectations" },
+          { type: 'paragraph', value: "• Keeps learners at the centre—approaches all coaching, facilitation, and decision-making with empathy and respect for young people navigating complex challenges.\n• Demonstrates maturity, reliability, and consistency in communication and collaboration.\n• Creates an environment that is safe, inclusive, and motivating for diverse youth.\n• Uses observation, data, and clear reasoning to guide decisions and interventions.\n• Provides steady leadership to interns and junior coaches, modelling professionalism and supporting team performance at scale.\n• Upholds high standards of learner behaviour, participation, and accountability.\n• Works well in a remote-first environment, contributing to connection, clarity, and joy within the team." },
+          { type: 'subheading', value: "Technical Proficiency + Problem-Solving" },
+          { type: 'paragraph', value: "• Confidently navigates the Skills Lab's learning systems, tools, and platforms.\n• Learn new tools quickly and independently.\n• Investigates curriculum or platform issues, identifies root causes, and proposes solutions.\n• Uses internal resources, documentation, and AI tools effectively to resolve technical questions.\n• Maintains a proactive, solutions-oriented mindset when troubleshooting or improving workflows." },
+          { type: 'subheading', value: "Learner Engagement + Accountability" },
+          { type: 'paragraph', value: "• Facilitates engaging, learner-centred sessions that build confidence, agency, and professional readiness.\n• Maintains strong engagement standards (active participation, communication, professionalism, cameras-on where applicable).\n• Intervenes early when disengagement or underperformance appears, ensuring learners receive clear expectations and actionable support.\n• Builds a culture of effort, responsibility, and growth.\n• Applies youth-sensitive behavioural approaches grounded in empathy, cultural understanding, and realistic expectations of South African youth contexts." },
+          { type: 'subheading', value: "Programme Delivery Support" },
+          { type: 'paragraph', value: "• Supports the coordination and delivery of large cohorts across SAP, SA Programmes, and related pathways.\n• Oversees onboarding, roll-out, and ongoing programme logistics in collaboration with internal teams.\n• Keeps learning experiences structured, predictable, and well-communicated.\n• Tracks learner progress accurately and ensures data capture is consistent.\n• Prepares performance reports, flags risks early, and recommends improvements.\n• Identifies patterns in learner blockers and provides input into programme and process refinements.\n• Works collaboratively with coaches, designers, data teams, and subject matter experts." },
+          { type: 'subheading', value: "Learner Support" },
+          { type: 'paragraph', value: "• Builds supportive, professional relationships with learners.\n• Identifies risks early—academic, behavioural, or contextual—and provides clear next steps.\n• Facilitates agile ceremonies (stand-ups, planning, check-ins, retros).\n• Supports learners through academic and technical blockers, encouraging peer learning.\n• Helps learners build self-efficacy, workplace readiness, and confidence." },
+          { type: 'subheading', value: "Task + Workflow Management" },
+          { type: 'paragraph', value: "• Schedules and assigns learner tasks to maintain steady progress.\n• Supports scheduling and oversight of assessments and feedback cycles.\n• Communicates attendance, performance, risks, and interventions to relevant stakeholders.\n• Coordinates with Subject Matter Experts to ensure their sessions are aligned, timely, and responsive to learner needs.\n• Escalates issues promptly to the correct stakeholders." },
+          { type: 'subheading', value: "How to Apply" },
+          { type: 'paragraph', value: "Complete the Application Form and include the following as supporting documents: CV, a min. 1-minute video stating why you are interested in the role, a cover letter, and contact details of a reference." }
+        ]
+      },
+      { 
+        title: "Accountant", location: "Remote", dossier: "FIN_ADMIN_401", variant: "magenta", desc: "Umuzi is seeking a detail-oriented Accountant to support the organisation's finance function. The role focuses on multi-currency bookkeeping, financial reporting, and payments.",
+        blocks: [
+          { type: 'paragraph', value: "Umuzi is seeking a detail-oriented Accountant to support the organisation's finance function. The role focuses on multi-currency bookkeeping, financial reporting, payments, reconciliations, and financial reporting as well as administration across multiple projects, with oversight and from the Finance Manager. This position is suitable for a candidate who is eager to build strong, practical experience in a project-based environment." },
+          { type: 'subheading', value: "Key Responsibilities: Accounting & Bookkeeping" },
+          { type: 'paragraph', value: "• Maintain accurate and up-to-date bookkeeping records on Xero.\n• Process and record weekly and monthly financial transactions.\n• Allocate income and expenses to the correct projects and cost centres on the accounting system.\n• Own the AP and AR function end-to-end, issuing invoices and following up consistently to collect outstanding funds.\n• Monitor project budget variances and alert project managers when spend reaches 80% of the project budget.\n• Build strong working relationships with project managers and stay close to project activity and progress." },
+          { type: 'subheading', value: "Payments & Financial Administration" },
+          { type: 'paragraph', value: "• Check incoming invoices against the project budget to confirm sufficient funds are available before payment.\n• Prepare and process weekly and monthly payment runs.\n• Load payments on banking platforms and circulate proof of payments.\n• Respond to internal finance-related queries and support operational teams with financial administration." },
+          { type: 'subheading', value: "Reconciliations" },
+          { type: 'paragraph', value: "• Perform balance sheet line item reconciliations.\n• Reconcile bank accounts on cashbook, creditor balances, and other key accounts on a monthly basis.\n• Investigate and resolve non-reconciling items timeously." },
+          { type: 'subheading', value: "Financial Reporting & Audit Support" },
+          { type: 'paragraph', value: "• Take ownership of project financial reporting - maintain project financial reports and communicate them to the project managers.\n• Support the Finance Manager with financial analysis, reporting requirements and funding proposals.\n• Preparation of supporting documentation for annual audits.\n• Maintain organised financial records to ensure audit readiness." },
+          { type: 'subheading', value: "Skills and Personal Attributes" },
+          { type: 'paragraph', value: "• Strong attention to detail and accuracy.\n• Good organisational and time-management skills.\n• Ability to meet strict deadlines.\n• Good written and verbal communication skills.\n• Exposure to Google Sheets (advantageous).\n• Willingness to learn and adapt in a project-based environment." },
+          { type: 'subheading', value: "Required Experience" },
+          { type: 'paragraph', value: "• BCom degree in Accounting, Finance, or a related field.\n• +3 years experience in a finance role.\n• Experience with bookkeeping (Xero experience is a strong advantage).\n• Understanding of financial reporting and reconciliations." },
+          { type: 'subheading', value: "How to Apply" },
+          { type: 'paragraph', value: "Complete the Application Form and include the following as supporting documents: CV, a min. 1-minute video stating why you are interested in the role, a cover letter, and contact details of a reference." }
+        ]
+      }
+    ];
+
+    if (!localStorage.getItem('umuzi_roles')) { localStorage.setItem('umuzi_roles', JSON.stringify(defaultRoles)); }
+    const loadedRoles = JSON.parse(localStorage.getItem('umuzi_roles')) || [];
+    const rolesGrid = document.getElementById('roles-grid');
+
+    // Dynamic builder matching previous hardcoded sci-fi UI
+    function createRoleCardHTML(item, index) {
+      let variantClass = item.variant ? item.variant : '';
+      let descString = item.desc || "Click to expand role requirements, technical proficiencies, and dossier details...";
+
+      return `
+        <a href="javascript:void(0)" class="sci-fi-role-card ${variantClass} reveal active" style="transition-delay: ${0.1 * ((index % 3) + 1)}s;" onclick="openRoleModal(${index})">
+          <div class="wire-conn"></div>
+          <div class="job-role-tag">
+            <h4>JOB ROLE:</h4>
+            <div class="fake-bars"></div>
+            <div class="fake-bars" style="width: 50px; margin-top: 2px;"></div>
+          </div>
+    
+          <div class="card-top-left-hashes">
+            <div class="hash-mark"></div><div class="hash-mark"></div><div class="hash-mark"></div><div class="hash-mark"></div><div class="hash-mark"></div>
+          </div>
+    
+          <div class="card-header-area">
+            <div class="micro-left">SYSTEM_VERIFICATION_PASS<br>DATA_READ v7.1<br>// VALIDATING...</div>
+            <div class="card-title-right">
+              <h3>${item.title}</h3>
+              <div class="micro-right">${item.dossier || 'CLASSIFIED_DOSSIER'}</div>
+            </div>
+          </div>
+    
+          <p class="desc">${descString}</p>
+    
+          <div class="card-footer-area">
+            <div class="card-location">${item.location}</div>
+            <div class="arrow-box">
+              <div class="arrow-icon"></div><div class="arrow-icon"></div><div class="arrow-icon"></div><div class="arrow-icon"></div><div class="arrow-icon"></div>
+            </div>
+          </div>
+        </a>
+      `;
+    }
+
+    if (rolesGrid) { rolesGrid.innerHTML = loadedRoles.map((r, i) => createRoleCardHTML(r, i)).join(''); }
+
+    // Re-observe dynamic items
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  });
+
+  // REVEAL ANIMATION OBSERVER
+  document.addEventListener('DOMContentLoaded', () => {
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observerOptions = { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.15 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    revealSections.forEach(section => observer.observe(section));
+  });
+
+  </script>
+</body>
+</html>

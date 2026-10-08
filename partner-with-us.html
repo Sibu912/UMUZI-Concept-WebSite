@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>UMUZI // PARTER WITH US</title>
+  <link rel="icon" type="image/svg+xml" href="assets/Images/UMUZI_Logo.svg">
+  <meta content="Collaborate with global partners to create learning-to-earning pathways." name="description">
+
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+  <style>
+    /* ── RESET & ROOT ─────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --cyan:     #00f5ff;
+      --magenta:  #ff00cc;
+      --green:    #00ff88;
+      --navy:     #000d1a;
+      --black:    #00060f;
+      --border-c: rgba(0, 245, 255, 0.35);
+      --border-m: rgba(255, 0, 204, 0.35);
+      --border-g: rgba(0, 255, 136, 0.35);
+      --glow-c:   0 0 8px #00f5ff, 0 0 20px rgba(0,245,255,0.4), 0 0 40px rgba(0,245,255,0.15);
+      --glow-m:   0 0 8px #ff00cc, 0 0 20px rgba(255,0,204,0.4);
+      --glow-g:   0 0 8px #00ff88, 0 0 20px rgba(0,255,136,0.4);
+      --mono:     'Share Tech Mono', monospace;
+      --orb:      'Orbitron', sans-serif;
+      --jet:      'JetBrains Mono', monospace;
+      --nav-h:    64px;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--mono); color: #fff;
+      background: var(--black);
+      overflow-x: hidden;
+    }
+    
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; padding: 0; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
+
+    /* ══ BACKGROUND & CANVAS ══════════════════════════════════════ */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 2; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      animation: scanMove 8s linear infinite;
+    }
+    @keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+/* ══ NAVBAR ═══════════════════════════════════════════════════ */
+    .main-nav {
+      position: fixed; top: 12px; left: 12px; right: 12px;
+      height: var(--nav-h); z-index: 999;
+      background: linear-gradient(180deg, rgba(0,6,15,0.95) 0%, rgba(0,6,15,0.7) 100%);
+      border-bottom: 1px solid var(--border-c);
+      box-shadow: 0 1px 0 rgba(0,245,255,0.6), 0 4px 30px rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 0px));
+      display: flex; align-items: center;
+      pointer-events: auto;
+    }
+
+    .main-nav::before {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%;
+      height: 100%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent);
+      animation: navScan 4s linear infinite;
+    }
+    @keyframes navScan { to { left: 200%; } }
+
+    .nav-ticker { position: absolute; top: -1px; left: 120px; right: 120px; height: 2px; overflow: hidden; }
+    .nav-ticker-inner {
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--green), transparent);
+      animation: tickerMove 3s linear infinite;
+    }
+    @keyframes tickerMove { to { left: 200%; } }
+
+    .nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-bracket { color: var(--cyan); font-size: 1.4rem; font-weight: 900; text-shadow: var(--glow-c); }
+    .logo-text { font-family: var(--orb); font-size: 1.3rem; font-weight: 900; letter-spacing: 6px; color: #fff; text-shadow: 0 0 10px rgba(0,245,255,0.5), 0 0 30px rgba(0,245,255,0.2); text-transform: uppercase; }
+    .logo-ver { font-family: var(--mono); font-size: 9px; color: var(--cyan); letter-spacing: 2px; margin-top: 2px; }
+    
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: flex; align-items: center; gap: 5px;
+      padding: 8px 14px; font-family: var(--mono); font-size: 10px; font-weight: 400;
+      color: rgba(0,245,255,0.5); text-transform: uppercase; letter-spacing: 2px;
+      transition: all 0.25s var(--ease); cursor: pointer; text-decoration: none;
+      position: relative; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      white-space: nowrap;
+    }
+    .nav-links > li > a:hover { color: var(--cyan); background: rgba(0,245,255,0.06); text-shadow: var(--glow-c); }
+    .nav-links > li > a::after {
+      content: ""; position: absolute; bottom: 0; left: 50%; right: 50%;
+      height: 1px; background: var(--cyan); box-shadow: var(--glow-c);
+      transition: all 0.3s var(--ease);
+    }
+    .nav-links > li > a:hover::after { left: 0; right: 0; }
+
+    .nav-ctas { display: flex; align-items: center; gap: 10px; }
+    .btn-hud {
+      padding: 7px 20px; font-family: var(--mono); font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px; text-decoration: none; cursor: pointer;
+      transition: all 0.25s var(--ease); position: relative; border: none;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .btn-hud.outline { background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan); box-shadow: inset 0 0 10px rgba(0,245,255,0.05), var(--glow-c); }
+    .btn-hud.outline:hover { background: rgba(0,245,255,0.12); box-shadow: inset 0 0 20px rgba(0,245,255,0.1), var(--glow-c); }
+    .btn-hud.filled { background: var(--cyan); color: #000; font-weight: 900; box-shadow: var(--glow-c); }
+    .btn-hud.filled:hover { background: #fff; box-shadow: 0 0 20px #fff, 0 0 40px rgba(0,245,255,0.5); }
+    .mobile-toggle { display: none; background: none; border: 1px solid var(--border-c); color: var(--cyan); padding: 6px 10px; font-size: 1.4rem; cursor: pointer; }
+
+    /* ══ MEGA MENUS ═══════════════════════════════════════════════ */
+    .mega-menu {
+      position: fixed; top: calc(12px + var(--nav-h)); left: 12px; right: 12px;
+      background: linear-gradient(160deg, rgba(0,8,20,0.97) 0%, rgba(0,3,10,0.99) 100%);
+      border: 1px solid var(--border-c); border-top: 2px solid var(--cyan);
+      box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 20px 60px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,245,255,0.02);
+      opacity: 0; visibility: hidden; transform: translateY(-8px) scaleY(0.97);
+      transition: all 0.3s var(--ease); z-index: 998; padding: 32px 40px;
+      pointer-events: none; backdrop-filter: blur(20px);
+      background-image: linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .mega-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scaleY(1); pointer-events: auto; }
+    .mega-inner { display: grid; grid-template-columns: 260px 1fr; gap: 40px; align-items: start; max-width: 1200px; margin: 0 auto; }
+    .mega-label { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--cyan); margin-bottom: 4px; text-transform: uppercase; }
+    .mega-title { font-family: var(--orb); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,245,255,0.3); }
+    .mega-desc { font-size: 10px; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .mega-cta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9px; color: var(--cyan); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.2s; }
+    .mega-cta:hover { text-shadow: var(--glow-c); gap: 10px; }
+    .mega-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mega-link {
+      padding: 16px 18px; background: rgba(0,245,255,0.02); border: 1px solid rgba(0,245,255,0.12); text-decoration: none; display: block;
+      transition: all 0.25s var(--ease); position: relative; overflow: hidden;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .mega-link::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--cyan); box-shadow: var(--glow-c); transform: scaleY(0); transform-origin: top;
+      transition: transform 0.3s var(--ease);
+    }
+    .mega-link:hover { background: rgba(0,245,255,0.06); border-color: rgba(0,245,255,0.3); transform: translateX(4px); }
+    .mega-link:hover::before { transform: scaleY(1); }
+    .mega-link h4 { font-family: var(--mono); font-size: 10px; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px; }
+    .mega-link p { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .mega-link-arr { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 8px; color: rgba(0,245,255,0.5); margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ══ MAIN SCROLLING CONTENT ═══════════════════════════════════ */
+    main { position: relative; z-index: 10; padding-top: 120px; padding-bottom: 60px; pointer-events: none; }
+    main * { pointer-events: auto; }
+    section { padding: 60px 0; position: relative; z-index: 10;}
+
+    h1, h2, h3, h4 { font-family: var(--orb); text-transform: uppercase; font-weight: 700; }
+    .section-label { font-size: 10px; letter-spacing: 4px; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-label::before { content: ""; width: 8px; height: 8px; background: var(--cyan); box-shadow: var(--glow-c); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .section-heading { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: 2px; color: #fff; text-shadow: var(--glow-c); margin-bottom: 16px; line-height: 1.2; }
+    .section-sub { font-size: 13px; color: rgba(0,245,255,0.6); max-width: 800px; line-height: 1.8; margin-bottom: 32px; letter-spacing: 1px; font-family: var(--jet); }
+
+    /* Hero Specific */
+    .hero { min-height: 60vh; display: flex; align-items: center; position: relative; padding-top: 80px;}
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 4px; font-weight: 900; margin-bottom: 24px; text-shadow: 0 0 20px rgba(0,245,255,0.5), var(--glow-c); }
+    .breadcrumbs { font-family: var(--mono); color: var(--cyan); margin-bottom: 24px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+    .breadcrumbs a { transition: 0.2s; }
+    .breadcrumbs a:hover { color: #fff; text-shadow: var(--glow-c); }
+    .breadcrumbs span { color: var(--magenta); margin: 0 8px; }
+
+    /* HUD Data Panels */
+    .hud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .hud-panel { 
+      background: transparent;
+      border: 1px solid var(--border-c); border-top: 2px solid var(--cyan);
+      backdrop-filter: none; padding: 32px; 
+      clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+      box-shadow: none;
+      transition: all 0.3s var(--ease); position: relative;
+    }
+    .hud-panel::before { content: ""; position: absolute; bottom: 0; right: 0; width: 30px; height: 30px; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); opacity: 0; transition: 0.3s; }
+    .hud-panel:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: inset 0 0 40px rgba(0,245,255,0.1), var(--glow-c), 0 12px 40px rgba(0,0,0,0.8); }
+    .hud-panel:hover::before { opacity: 1; box-shadow: inset -10px -10px 20px rgba(0,245,255,0.2); }
+    
+    .hud-panel .icon { width: 44px; height: 44px; background: rgba(0,245,255,0.1); border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--cyan); margin-bottom: 20px; box-shadow: var(--glow-c); clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%); }
+    .hud-panel h3 { font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 10px; color: #fff; }
+    .hud-panel p { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.8; letter-spacing: 1px; font-family: var(--jet); }
+    .hud-panel ul { margin-top: 16px; padding-left: 16px; font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.8; font-family: var(--jet); list-style-type: square; }
+    .hud-panel ul li { margin-bottom: 8px; }
+    .hud-panel ul li::marker { color: var(--cyan); }
+
+    /* Feature Rows (Image + Text) */
+    .feature-row { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; margin-bottom: 60px; }
+    .feature-row:nth-child(even) { flex-direction: row-reverse; }
+    .feature-text { flex: 1; min-width: 300px; }
+    .feature-text h3 { color: var(--cyan); margin-bottom: 16px; letter-spacing: 2px; }
+    .feature-text p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; font-family: var(--jet); margin-bottom: 16px; }
+    .feature-text ul { padding-left: 20px; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; font-family: var(--jet); margin-bottom: 16px; list-style-type: square; }
+    .feature-text ul li { margin-bottom: 8px; }
+    .feature-text ul li::marker { color: var(--cyan); }
+    
+    .feature-img { flex: 1; min-width: 300px; }
+    .cyber-image-frame {
+      width: 100%; min-height: 300px; background: rgba(0, 245, 255, 0.05);
+      border: 1px solid var(--border-c); box-shadow: inset 0 0 30px rgba(0, 245, 255, 0.1);
+      clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+      display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+    }
+    .cyber-image-frame::before {
+      content: "NO_SIGNAL // IMG_DATA_MISSING"; font-family: var(--mono);
+      color: rgba(0, 245, 255, 0.3); letter-spacing: 4px; font-size: 12px;
+    }
+    .cyber-image-frame.has-image {
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+    }
+    .cyber-image-frame.has-image::before {
+      content: "";
+    }
+
+    /* Logo Grid for Partners */
+    .logo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-top: 40px; }
+    .logo-box {
+      padding: 24px; border: 1px solid rgba(0,245,255,0.3); text-align: center;
+      color: rgba(255,255,255,0.6); font-family: var(--mono); font-size: 14px;
+      font-weight: bold; letter-spacing: 2px; transition: 0.2s; background: rgba(0,245,255,0.04);
+      display: flex; align-items: center; justify-content: center; min-height: 92px;
+    }
+    .logo-box:hover { border-color: var(--green); text-shadow: var(--glow-g); background: rgba(0,255,136,0.08); box-shadow: inset 0 0 40px rgba(0,255,136,0.1), var(--glow-g); }
+    .logo-box img.cyan-tint { filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(3000%) hue-rotate(140deg) brightness(105%) contrast(105%); opacity: 0.85; transition: filter 0.3s ease, opacity 0.3s ease; }
+    .logo-box img.neon-green-tint { filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(3000%) hue-rotate(120deg) saturate(4) brightness(110%) contrast(105%); opacity: 1; }
+    .logo-box img.invert.cyan-tint { filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(3000%) hue-rotate(140deg) brightness(105%) contrast(105%); opacity: 0.85; }
+    .logo-box img.invert.neon-green-tint { filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(3000%) hue-rotate(120deg) saturate(4) brightness(110%) contrast(105%); opacity: 1; }
+
+    /* ══ FOOTER / CYBER-FOOTER ════════════════════════════════════ */
+    .cyber-footer {
+      position: relative; margin: 40px 12px 12px 12px; z-index: 15; pointer-events: auto;
+      background: linear-gradient(180deg, rgba(0,8,20,0.55) 0%, rgba(0,4,12,0.92) 100%);
+      border-top: 1px solid var(--border-c);
+      backdrop-filter: blur(16px);
+      padding: 22px 36px 10px 36px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%, 0 24px);
+      box-shadow: 0 -1px 0 rgba(0,245,255,0.5), inset 0 0 40px rgba(0,0,0,0.6);
+    }
+    .cyber-footer::before, .cyber-footer::after {
+      content: ""; position: absolute; top: 0; width: 36px; height: 36px;
+      border-top: 2px solid var(--cyan); box-shadow: var(--glow-c); pointer-events: none;
+    }
+    .cyber-footer::before { left: 24px; border-left: 2px solid var(--cyan); }
+    .cyber-footer::after  { right: 24px; border-right: 2px solid var(--cyan); }
+
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .f-nav-col { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
+    .f-nav-col.right { align-items: flex-end; }
+    .f-link { font-family: var(--mono); font-size: 9px; font-weight: 700; color: rgba(0,245,255,0.4); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.25s var(--ease); position: relative; display: inline-flex; align-items: center; gap: 5px; }
+    .f-link::before { content: "//"; color: var(--cyan); opacity: 0; transition: all 0.2s; font-size: 8px; }
+    .f-link:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+    .f-link:hover::before { opacity: 1; }
+
+    .f-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo { font-family: var(--orb); font-size: 2rem; font-weight: 900; letter-spacing: 12px; color: #fff; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.3), var(--glow-c); line-height: 1; }
+    .footer-logo-sub { font-family: var(--mono); font-size: 7px; letter-spacing: 6px; color: rgba(0,245,255,0.4); text-transform: uppercase; margin-top: -4px; }
+    .social-row { display: flex; gap: 10px; }
+    .s-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; font-size: 12px; text-decoration: none; border: 1px solid rgba(0,245,255,0.2); color: rgba(0,245,255,0.4); background: rgba(0,245,255,0.03); transition: all 0.25s var(--ease); clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%); }
+    .s-icon:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); transform: scale(1.1); }
+
+    .f-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), var(--cyan), rgba(0,245,255,0.15), transparent); margin-bottom: 10px; position: relative; }
+    .f-divider::after { content: "◆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--cyan); font-size: 8px; text-shadow: var(--glow-c); background: var(--black); padding: 0 6px; }
+
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); position: relative; }
+    .f-copy-links { display: flex; gap: 16px; }
+    .f-copy-links a { color: inherit; text-decoration: none; transition: all 0.2s; text-transform: uppercase; }
+    .f-copy-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+    .f-year { color: var(--cyan); font-weight: 700; letter-spacing: 4px; font-size: 9px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .f-credit { text-transform: uppercase; }
+    .f-credit span { color: var(--cyan); font-family: var(--orb); font-size: 9px; letter-spacing: 3px; text-shadow: var(--glow-c); }
+
+    @media (max-width: 1100px) {
+      .nav-links, .nav-ctas { display: none; }
+      .mobile-toggle { display: block; }
+      .mega-inner { grid-template-columns: 1fr; }
+      .cyber-footer { padding: 20px 20px 10px; }
+      .footer-top { flex-direction: column; gap: 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .f-nav-col { flex-direction: row; }
+    }
+    /* ══ IFRAME BACKGROUND ═══════════════════════════════════════ */
+    .bg-iframe {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* General Background Grid */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      animation: scanMove 8s linear infinite;
+    }
+    @keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+    /* ══ NAVBAR ═══════════════════════════════════════════════════ */
+    .main-nav {
+      position: fixed; top: 12px; left: 12px; right: 12px;
+      height: var(--nav-h); z-index: 999;
+      background: linear-gradient(180deg, rgba(0,6,15,0.95) 0%, rgba(0,6,15,0.7) 100%);
+      border-bottom: 1px solid var(--border-c);
+      box-shadow: 0 1px 0 rgba(0,245,255,0.6), 0 4px 30px rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 0px));
+      display: flex; align-items: center;
+      pointer-events: auto;
+      transition: clip-path 0.2s ease;
+    }
+
+    /* Un-clip navbar mask on mobile open */
+    .main-nav.menu-open {
+      clip-path: none !important;
+    }
+
+    .main-nav::before {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%;
+      height: 100%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent);
+      animation: navScan 4s linear infinite;
+    }
+    @keyframes navScan { to { left: 200%; } }
+
+    .nav-ticker { position: absolute; top: -1px; left: 120px; right: 120px; height: 2px; overflow: hidden; }
+    .nav-ticker-inner {
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--green), transparent);
+      animation: tickerMove 3s linear infinite;
+    }
+    @keyframes tickerMove { to { left: 200%; } }
+
+    .nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-bracket { color: var(--cyan); font-size: 1.4rem; font-weight: 900; text-shadow: var(--glow-c); }
+    .logo-text {
+      font-family: var(--orb); font-size: 1.3rem; font-weight: 900;
+      letter-spacing: 6px; color: #fff;
+      text-shadow: 0 0 10px rgba(0,245,255,0.5), 0 0 30px rgba(0,245,255,0.2);
+      text-transform: uppercase;
+    }
+    
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: flex; align-items: center; gap: 5px;
+      padding: 8px 14px; font-family: var(--mono); font-size: 10px; font-weight: 400;
+      color: rgba(0,245,255,0.5); text-transform: uppercase; letter-spacing: 2px;
+      transition: all 0.25s var(--ease); cursor: pointer; text-decoration: none;
+      position: relative; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      white-space: nowrap;
+    }
+    .nav-links > li > a:hover {
+      color: var(--cyan); background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow-c);
+    }
+    .nav-links > li > a::after {
+      content: ""; position: absolute; bottom: 0; left: 50%; right: 50%;
+      height: 1px; background: var(--cyan); box-shadow: var(--glow-c);
+      transition: all 0.3s var(--ease);
+    }
+    .nav-links > li > a:hover::after { left: 0; right: 0; }
+
+    /* Base display rules for mobile structural elements */
+    .chevron-icon { display: none; }
+    .desktop-prefix { display: inline-block; margin-right: 4px; opacity: 0.7; }
+    .desktop-chevron { display: inline-block; font-size: 8px; margin-left: 5px; transition: transform 0.3s; }
+    .mobile-nav-footer-container { display: none; }
+
+    .nav-ctas { display: flex; align-items: center; gap: 10px; }
+    .btn-hud {
+      padding: 7px 20px; font-family: var(--mono); font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px; text-decoration: none; cursor: pointer;
+      transition: all 0.25s var(--ease); position: relative; border: none;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .btn-hud.outline {
+      background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan);
+      box-shadow: inset 0 0 10px rgba(0,245,255,0.05), var(--glow-c);
+    }
+    .btn-hud.outline:hover { background: rgba(0,245,255,0.12); box-shadow: inset 0 0 20px rgba(0,245,255,0.1), var(--glow-c); }
+    .btn-hud.filled { background: var(--cyan); color: #000; font-weight: 900; box-shadow: var(--glow-c); }
+    .btn-hud.filled:hover { background: #fff; box-shadow: 0 0 20px #fff, 0 0 40px rgba(0,245,255,0.5); }
+    
+    .mobile-toggle { 
+        display: none; background: none; border: 1px solid var(--border-c); 
+        color: var(--cyan); padding: 6px 10px; font-size: 1.4rem; cursor: pointer; 
+    }
+
+    /* ══ MEGA MENUS ═══════════════════════════════════════════════ */
+    .mega-menu {
+      position: fixed; top: calc(12px + var(--nav-h)); left: 12px; right: 12px;
+      background: linear-gradient(160deg, rgba(0,8,20,0.97) 0%, rgba(0,3,10,0.99) 100%);
+      border: 1px solid var(--border-c);
+      border-top: 2px solid var(--cyan);
+      box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 20px 60px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,245,255,0.02);
+      opacity: 0; visibility: hidden; transform: translateY(-8px) scaleY(0.97);
+      transition: all 0.3s var(--ease); z-index: 998; padding: 32px 40px;
+      pointer-events: none; backdrop-filter: blur(20px);
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .mega-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scaleY(1); pointer-events: auto; }
+    .mega-inner { display: grid; grid-template-columns: 260px 1fr; gap: 40px; align-items: start; max-width: 1200px; margin: 0 auto; }
+    .mega-label { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--cyan); margin-bottom: 4px; text-transform: uppercase; }
+    .mega-title { font-family: var(--orb); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,245,255,0.3); }
+    .mega-desc { font-size: 10px; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .mega-cta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9px; color: var(--cyan); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.2s; }
+    .mega-cta:hover { text-shadow: var(--glow-c); gap: 10px; }
+    .mega-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mega-link {
+      padding: 16px 18px; background: rgba(0,245,255,0.02);
+      border: 1px solid rgba(0,245,255,0.12); text-decoration: none; display: block;
+      transition: all 0.25s var(--ease); position: relative; overflow: hidden;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .mega-link::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--cyan); box-shadow: var(--glow-c); transform: scaleY(0); transform-origin: top;
+      transition: transform 0.3s var(--ease);
+    }
+    .mega-link:hover { background: rgba(0,245,255,0.06); border-color: rgba(0,245,255,0.3); transform: translateX(4px); }
+    .mega-link:hover::before { transform: scaleY(1); }
+    .mega-link h4 { font-family: var(--mono); font-size: 10px; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px; }
+    .mega-link p { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .mega-link-arr { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 8px; color: rgba(0,245,255,0.5); margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+    @media (min-width: 1101px) {
+      .mobile-sub { display: none !important; }
+    }
+
+    /* ══ HOVER FLOAT ANIMATION ═══════════════════════════════════ */
+    .hover-float { transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+    .hover-float:hover { transform: translateY(-5px); }
+    /* ══ FOOTER / CYBER-FOOTER ════════════════════════════════════ */
+    .cyber-footer {
+      position: relative; margin: 40px 12px 12px 12px; z-index: 15; pointer-events: auto;
+      background: linear-gradient(180deg, rgba(0,8,20,0.55) 0%, rgba(0,4,12,0.92) 100%);
+      border-top: 1px solid var(--border-c);
+      backdrop-filter: blur(16px);
+      padding: 22px 36px 10px 36px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%, 0 24px);
+      box-shadow: 0 -1px 0 rgba(0,245,255,0.5), inset 0 0 40px rgba(0,0,0,0.6);
+    }
+    .cyber-footer::before, .cyber-footer::after {
+      content: ""; position: absolute; top: 0; width: 36px; height: 36px;
+      border-top: 2px solid var(--cyan);
+      box-shadow: var(--glow-c); pointer-events: none;
+    }
+    .cyber-footer::before { left: 24px; border-left: 2px solid var(--cyan); }
+    .cyber-footer::after  { right: 24px; border-right: 2px solid var(--cyan); }
+
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .f-nav-col { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
+    .f-nav-col.right { align-items: flex-end; }
+    .f-link {
+      font-family: var(--mono); font-size: 9px; font-weight: 700; color: rgba(0,245,255,0.4);
+      text-transform: uppercase; letter-spacing: 3px; text-decoration: none;
+      transition: all 0.25s var(--ease); position: relative; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .f-link::before { content: "//"; color: var(--cyan); opacity: 0; transition: all 0.2s; font-size: 8px; }
+    .f-link:hover { color: var(--cyan); text-shadow: var(--glow-c); transform: translateX(5px); }
+    .f-nav-col.right .f-link:hover { transform: translateX(-5px); }
+    .f-link:hover::before { opacity: 1; }
+
+    .f-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo {
+      font-family: var(--orb); font-size: 2rem; font-weight: 900; letter-spacing: 12px;
+      color: #fff; text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3), var(--glow-c);
+      line-height: 1;
+    }
+    .footer-logo-sub { font-family: var(--mono); font-size: 7px; letter-spacing: 6px; color: rgba(0,245,255,0.4); text-transform: uppercase; margin-top: -4px; }
+    .social-row { display: flex; gap: 10px; }
+    .s-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; font-size: 12px; text-decoration: none;
+      border: 1px solid rgba(0,245,255,0.2); color: rgba(0,245,255,0.4);
+      background: rgba(0,245,255,0.03); transition: all 0.25s var(--ease);
+      clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%);
+    }
+    .s-icon:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); transform: scale(1.1) rotate(15deg); }
+
+    .f-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), var(--cyan), rgba(0,245,255,0.15), transparent);
+      margin-bottom: 10px; position: relative;
+    }
+    .f-divider::after {
+      content: "◆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      color: var(--cyan); font-size: 8px; text-shadow: var(--glow-c);
+      background: var(--black); padding: 0 6px;
+    }
+
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: rgba(255,255,255,0.3);
+      position: relative;
+    }
+    .f-copy-links { display: flex; gap: 16px; }
+    .f-copy-links a { color: inherit; text-decoration: none; transition: all 0.2s; text-transform: uppercase; }
+    .f-copy-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+    .f-year { color: var(--cyan); font-weight: 700; letter-spacing: 4px; font-size: 9px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .f-credit { text-transform: uppercase; }
+    .f-credit span { color: var(--cyan); font-family: var(--orb); font-size: 9px; letter-spacing: 3px; text-shadow: var(--glow-c); }
+
+    /* Responsive Mobile Media Queries */
+    @media (max-width: 1100px) {
+      .desktop-prefix { display: none; }
+      .desktop-chevron { display: none; }
+      .nav-ctas { display: none; }
+      .mobile-toggle { display: block; }
+      .mega-inner { grid-template-columns: 1fr; }
+      .cyber-footer { padding: 20px 20px 10px; }
+      .footer-top { flex-direction: column; gap: 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .f-nav-col { flex-direction: row; }
+      
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: calc(12px + var(--nav-h));
+        left: 12px;
+        right: 12px;
+        width: auto;
+        height: auto;
+        max-height: calc(100vh - var(--nav-h) - 30px);
+        background: rgba(0, 6, 15, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-c);
+        border-top: 2px solid var(--cyan);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.95);
+        flex-direction: column;
+        padding: 30px 40px;
+        z-index: 999;
+        overflow-y: auto;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 4px 0;
+      }
+      
+      .chevron-icon { 
+          display: inline-block; 
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 14px;
+          transition: transform 0.3s var(--ease);
+      }
+      
+      .nav-links > li > a {
+        font-family: var(--orb);
+        font-size: 16px;
+        padding: 12px 0 12px 28px;
+        justify-content: flex-start;
+        border-bottom: none;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 1px;
+        text-transform: none;
+        clip-path: none;
+        background: transparent;
+      }
+      
+      .nav-links > li > a.no-sub {
+        padding-left: 28px;
+      }
+
+      .nav-links > li.open > a .chevron-icon {
+        transform: translateY(-50%) rotate(180deg);
+      }
+      .nav-links > li.open > a {
+        color: var(--cyan);
+        text-shadow: var(--glow-c);
+        background: transparent;
+      }
+      .mega-menu { display: none !important; }
+
+      .mobile-sub {
+        display: none;
+        flex-direction: column;
+        background: transparent;
+        margin: 0;
+        padding: 0 0 10px 28px;
+      }
+      .mobile-sub.open {
+        display: flex;
+        animation: dropDown 0.3s ease forwards;
+      }
+      @keyframes dropDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .mobile-sub li {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin: 0;
+      }
+      .mobile-sub li a {
+        padding: 8px 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-family: var(--orb);
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        text-transform: none;
+        letter-spacing: 1px;
+        border-bottom: none;
+        clip-path: none;
+      }
+      .mobile-sub li a:hover {
+        color: var(--cyan);
+        background: transparent;
+        text-shadow: var(--glow-c);
+      }
+      .mobile-sub li a::after {
+        display: none;
+      }
+
+      .mobile-nav-footer-container {
+        display: block;
+        margin-top: auto;
+        padding-top: 25px;
+        padding-bottom: 10px;
+      }
+      .mobile-nav-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+        margin-bottom: 25px;
+        border: none;
+      }
+      .mobile-nav-ctas {
+        display: flex;
+        gap: 16px;
+      }
+      .mobile-nav-ctas .btn-hud {
+          padding: 10px 24px;
+          font-size: 12px;
+      }
+      .mobile-nav-ctas a i {
+          margin-left: 6px;
+      }
+    }
+    /* ══ IFRAME BACKGROUND ═══════════════════════════════════════ */
+    .bg-iframe {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* General Background Grid */
+    body::after {
+      content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      animation: scanMove 8s linear infinite;
+    }
+    @keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+    /* ══ NAVBAR ═══════════════════════════════════════════════════ */
+    .main-nav {
+      position: fixed; top: 12px; left: 12px; right: 12px;
+      height: var(--nav-h); z-index: 999;
+      background: linear-gradient(180deg, rgba(0,6,15,0.95) 0%, rgba(0,6,15,0.7) 100%);
+      border-bottom: 1px solid var(--border-c);
+      box-shadow: 0 1px 0 rgba(0,245,255,0.6), 0 4px 30px rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 0px));
+      display: flex; align-items: center;
+      pointer-events: auto;
+      transition: clip-path 0.2s ease;
+    }
+
+    /* Un-clip navbar mask on mobile open */
+    .main-nav.menu-open {
+      clip-path: none !important;
+    }
+
+    .main-nav::before {
+      content: ""; position: absolute; top: 0; left: -100%; width: 60%;
+      height: 100%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent);
+      animation: navScan 4s linear infinite;
+    }
+    @keyframes navScan { to { left: 200%; } }
+
+    .nav-ticker { position: absolute; top: -1px; left: 120px; right: 120px; height: 2px; overflow: hidden; }
+    .nav-ticker-inner {
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--green), transparent);
+      animation: tickerMove 3s linear infinite;
+    }
+    @keyframes tickerMove { to { left: 200%; } }
+
+    .nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-bracket { color: var(--cyan); font-size: 1.4rem; font-weight: 900; text-shadow: var(--glow-c); }
+    .logo-text {
+      font-family: var(--orb); font-size: 1.3rem; font-weight: 900;
+      letter-spacing: 6px; color: #fff;
+      text-shadow: 0 0 10px rgba(0,245,255,0.5), 0 0 30px rgba(0,245,255,0.2);
+      text-transform: uppercase;
+    }
+    
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: flex; align-items: center; gap: 5px;
+      padding: 8px 14px; font-family: var(--mono); font-size: 10px; font-weight: 400;
+      color: rgba(0,245,255,0.5); text-transform: uppercase; letter-spacing: 2px;
+      transition: all 0.25s var(--ease); cursor: pointer; text-decoration: none;
+      position: relative; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      white-space: nowrap;
+    }
+    .nav-links > li > a:hover {
+      color: var(--cyan); background: rgba(0,245,255,0.06);
+      text-shadow: var(--glow-c);
+    }
+    .nav-links > li > a::after {
+      content: ""; position: absolute; bottom: 0; left: 50%; right: 50%;
+      height: 1px; background: var(--cyan); box-shadow: var(--glow-c);
+      transition: all 0.3s var(--ease);
+    }
+    .nav-links > li > a:hover::after { left: 0; right: 0; }
+
+    /* Base display rules for mobile structural elements */
+    .chevron-icon { display: none; }
+    .desktop-prefix { display: inline-block; margin-right: 4px; opacity: 0.7; }
+    .desktop-chevron { display: inline-block; font-size: 8px; margin-left: 5px; transition: transform 0.3s; }
+    .mobile-nav-footer-container { display: none; }
+
+    .nav-ctas { display: flex; align-items: center; gap: 10px; }
+    .btn-hud {
+      padding: 7px 20px; font-family: var(--mono); font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px; text-decoration: none; cursor: pointer;
+      transition: all 0.25s var(--ease); position: relative; border: none;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .btn-hud.outline {
+      background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan);
+      box-shadow: inset 0 0 10px rgba(0,245,255,0.05), var(--glow-c);
+    }
+    .btn-hud.outline:hover { background: rgba(0,245,255,0.12); box-shadow: inset 0 0 20px rgba(0,245,255,0.1), var(--glow-c); }
+    .btn-hud.filled { background: var(--cyan); color: #000; font-weight: 900; box-shadow: var(--glow-c); }
+    .btn-hud.filled:hover { background: #fff; box-shadow: 0 0 20px #fff, 0 0 40px rgba(0,245,255,0.5); }
+    
+    .mobile-toggle { 
+        display: none; background: none; border: 1px solid var(--border-c); 
+        color: var(--cyan); padding: 6px 10px; font-size: 1.4rem; cursor: pointer; 
+    }
+
+    /* ══ MEGA MENUS ═══════════════════════════════════════════════ */
+    .mega-menu {
+      position: fixed; top: calc(12px + var(--nav-h)); left: 12px; right: 12px;
+      background: linear-gradient(160deg, rgba(0,8,20,0.97) 0%, rgba(0,3,10,0.99) 100%);
+      border: 1px solid var(--border-c);
+      border-top: 2px solid var(--cyan);
+      box-shadow: 0 0 0 1px rgba(0,245,255,0.1), 0 20px 60px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,245,255,0.02);
+      opacity: 0; visibility: hidden; transform: translateY(-8px) scaleY(0.97);
+      transition: all 0.3s var(--ease); z-index: 998; padding: 32px 40px;
+      pointer-events: none; backdrop-filter: blur(20px);
+      background-image:
+        linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .mega-menu.open { opacity: 1; visibility: visible; transform: translateY(0) scaleY(1); pointer-events: auto; }
+    .mega-inner { display: grid; grid-template-columns: 260px 1fr; gap: 40px; align-items: start; max-width: 1200px; margin: 0 auto; }
+    .mega-label { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--cyan); margin-bottom: 4px; text-transform: uppercase; }
+    .mega-title { font-family: var(--orb); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,245,255,0.3); }
+    .mega-desc { font-size: 10px; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 16px; letter-spacing: 0.5px; }
+    .mega-cta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 9px; color: var(--cyan); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.2s; }
+    .mega-cta:hover { text-shadow: var(--glow-c); gap: 10px; }
+    .mega-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mega-link {
+      padding: 16px 18px; background: rgba(0,245,255,0.02);
+      border: 1px solid rgba(0,245,255,0.12); text-decoration: none; display: block;
+      transition: all 0.25s var(--ease); position: relative; overflow: hidden;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .mega-link::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--cyan); box-shadow: var(--glow-c); transform: scaleY(0); transform-origin: top;
+      transition: transform 0.3s var(--ease);
+    }
+    .mega-link:hover { background: rgba(0,245,255,0.06); border-color: rgba(0,245,255,0.3); transform: translateX(4px); }
+    .mega-link:hover::before { transform: scaleY(1); }
+    .mega-link h4 { font-family: var(--mono); font-size: 10px; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px; }
+    .mega-link p { font-size: 9px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+    .mega-link-arr { display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 8px; color: rgba(0,245,255,0.5); margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+    @media (min-width: 1101px) {
+      .mobile-sub { display: none !important; }
+    }
+
+    /* ══ HOVER FLOAT ANIMATION ═══════════════════════════════════ */
+    .hover-float { transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+    .hover-float:hover { transform: translateY(-5px); }
+    /* ══ FOOTER / CYBER-FOOTER ════════════════════════════════════ */
+    .cyber-footer {
+      position: relative; margin: 40px 12px 12px 12px; z-index: 15; pointer-events: auto;
+      background: linear-gradient(180deg, rgba(0,8,20,0.55) 0%, rgba(0,4,12,0.92) 100%);
+      border-top: 1px solid var(--border-c);
+      backdrop-filter: blur(16px);
+      padding: 22px 36px 10px 36px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 0 100%, 0 24px);
+      box-shadow: 0 -1px 0 rgba(0,245,255,0.5), inset 0 0 40px rgba(0,0,0,0.6);
+    }
+    .cyber-footer::before, .cyber-footer::after {
+      content: ""; position: absolute; top: 0; width: 36px; height: 36px;
+      border-top: 2px solid var(--cyan);
+      box-shadow: var(--glow-c); pointer-events: none;
+    }
+    .cyber-footer::before { left: 24px; border-left: 2px solid var(--cyan); }
+    .cyber-footer::after  { right: 24px; border-right: 2px solid var(--cyan); }
+
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .f-nav-col { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
+    .f-nav-col.right { align-items: flex-end; }
+    .f-link {
+      font-family: var(--mono); font-size: 9px; font-weight: 700; color: rgba(0,245,255,0.4);
+      text-transform: uppercase; letter-spacing: 3px; text-decoration: none;
+      transition: all 0.25s var(--ease); position: relative; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .f-link::before { content: "//"; color: var(--cyan); opacity: 0; transition: all 0.2s; font-size: 8px; }
+    .f-link:hover { color: var(--cyan); text-shadow: var(--glow-c); transform: translateX(5px); }
+    .f-nav-col.right .f-link:hover { transform: translateX(-5px); }
+    .f-link:hover::before { opacity: 1; }
+
+    .f-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-logo {
+      font-family: var(--orb); font-size: 2rem; font-weight: 900; letter-spacing: 12px;
+      color: #fff; text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3), var(--glow-c);
+      line-height: 1;
+    }
+    .footer-logo-sub { font-family: var(--mono); font-size: 7px; letter-spacing: 6px; color: rgba(0,245,255,0.4); text-transform: uppercase; margin-top: -4px; }
+    .social-row { display: flex; gap: 10px; }
+    .s-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; font-size: 12px; text-decoration: none;
+      border: 1px solid rgba(0,245,255,0.2); color: rgba(0,245,255,0.4);
+      background: rgba(0,245,255,0.03); transition: all 0.25s var(--ease);
+      clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%);
+    }
+    .s-icon:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); transform: scale(1.1) rotate(15deg); }
+
+    .f-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), var(--cyan), rgba(0,245,255,0.15), transparent);
+      margin-bottom: 10px; position: relative;
+    }
+    .f-divider::after {
+      content: "◆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      color: var(--cyan); font-size: 8px; text-shadow: var(--glow-c);
+      background: var(--black); padding: 0 6px;
+    }
+
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: rgba(255,255,255,0.3);
+      position: relative;
+    }
+    .f-copy-links { display: flex; gap: 16px; }
+    .f-copy-links a { color: inherit; text-decoration: none; transition: all 0.2s; text-transform: uppercase; }
+    .f-copy-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+    .f-year { color: var(--cyan); font-weight: 700; letter-spacing: 4px; font-size: 9px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .f-credit { text-transform: uppercase; }
+    .f-credit span { color: var(--cyan); font-family: var(--orb); font-size: 9px; letter-spacing: 3px; text-shadow: var(--glow-c); }
+
+    /* Responsive Mobile Media Queries */
+    @media (max-width: 1100px) {
+      .desktop-prefix { display: none; }
+      .desktop-chevron { display: none; }
+      .nav-ctas { display: none; }
+      .mobile-toggle { display: block; }
+      .mega-inner { grid-template-columns: 1fr; }
+      .cyber-footer { padding: 20px 20px 10px; }
+      .footer-top { flex-direction: column; gap: 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .f-nav-col { flex-direction: row; }
+      
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: calc(12px + var(--nav-h));
+        left: 12px;
+        right: 12px;
+        width: auto;
+        height: auto;
+        max-height: calc(100vh - var(--nav-h) - 30px);
+        background: rgba(0, 6, 15, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-c);
+        border-top: 2px solid var(--cyan);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.95);
+        flex-direction: column;
+        padding: 30px 40px;
+        z-index: 999;
+        overflow-y: auto;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 4px 0;
+      }
+      
+      .chevron-icon { 
+          display: inline-block; 
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 14px;
+          transition: transform 0.3s var(--ease);
+      }
+      
+      .nav-links > li > a {
+        font-family: var(--orb);
+        font-size: 16px;
+        padding: 12px 0 12px 28px;
+        justify-content: flex-start;
+        border-bottom: none;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 1px;
+        text-transform: none;
+        clip-path: none;
+        background: transparent;
+      }
+      
+      .nav-links > li > a.no-sub {
+        padding-left: 28px;
+      }
+
+      .nav-links > li.open > a .chevron-icon {
+        transform: translateY(-50%) rotate(180deg);
+      }
+      .nav-links > li.open > a {
+        color: var(--cyan);
+        text-shadow: var(--glow-c);
+        background: transparent;
+      }
+      .mega-menu { display: none !important; }
+
+      .mobile-sub {
+        display: none;
+        flex-direction: column;
+        background: transparent;
+        margin: 0;
+        padding: 0 0 10px 28px;
+      }
+      .mobile-sub.open {
+        display: flex;
+        animation: dropDown 0.3s ease forwards;
+      }
+      @keyframes dropDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .mobile-sub li {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin: 0;
+      }
+      .mobile-sub li a {
+        padding: 8px 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-family: var(--orb);
+        text-decoration: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        text-transform: none;
+        letter-spacing: 1px;
+        border-bottom: none;
+        clip-path: none;
+      }
+      .mobile-sub li a:hover {
+        color: var(--cyan);
+        background: transparent;
+        text-shadow: var(--glow-c);
+      }
+      .mobile-sub li a::after {
+        display: none;
+      }
+
+      .mobile-nav-footer-container {
+        display: block;
+        margin-top: auto;
+        padding-top: 25px;
+        padding-bottom: 10px;
+      }
+      .mobile-nav-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+        margin-bottom: 25px;
+        border: none;
+      }
+      .mobile-nav-ctas {
+        display: flex;
+        gap: 16px;
+      }
+      .mobile-nav-ctas .btn-hud {
+          padding: 10px 24px;
+          font-size: 12px;
+      }
+      .mobile-nav-ctas a i {
+          margin-left: 6px;
+      }
+    }
+      @media (max-width: 768px) {
+      .cyber-image-frame { min-height: 240px; }
+      .modal-image-frame { min-height: 240px; }
+    }
+
+    /* ══ CARD CLAMP & EXPAND BTN ═══════════════════════════════════════ */
+    .hud-panel[data-purpose] { cursor: pointer; }
+    .hud-panel[data-purpose] p.card-clamp {
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+      font-family: var(--jet); font-size: 12px; line-height: 1.8; color: rgba(255,255,255,0.6);
+      margin-bottom: 18px;
+    }
+    .hud-panel[data-purpose] .expand-btn {
+      margin-top: auto; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--cyan);
+      text-transform: uppercase; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .hud-panel[data-purpose] .expand-btn::after { content: '\2192'; }
+
+    /* ══ PURPOSE MODAL ═══════════════════════════════════════ */
+    .purpose-modal {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0, 5, 12, 0.35); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: 0.3s ease;
+    }
+    .purpose-modal.active { opacity: 1; pointer-events: auto; }
+    .purpose-modal-content {
+      position: relative; max-width: 820px; width: 92%; min-height: 460px; padding: 48px;
+      border: 1px solid var(--cyan); box-shadow: 0 0 50px rgba(0,245,255,0.25), inset 0 0 30px rgba(0,245,255,0.12);
+      clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+      transform: translateY(20px) scale(0.96); transition: 0.3s ease; overflow: hidden;
+    }
+    .purpose-modal.active .purpose-modal-content { transform: translateY(0) scale(1); }
+    .purpose-modal-content h3 { font-size: 2rem; color: #fff; margin-bottom: 16px; text-shadow: var(--glow-c); }
+    .purpose-modal-content p { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,0.85); max-width: 60ch; }
+    .purpose-modal-close {
+      position: absolute; top: 16px; right: 16px; background: none; border: none;
+      color: var(--cyan); font-size: 1.5rem; cursor: pointer; z-index: 5; transition: 0.2s;
+    }
+    .purpose-modal-close:hover { text-shadow: var(--glow-c); transform: scale(1.1); }
+
+    /* ══ REVEAL ANIMATIONS ═══════════════════════════════════════ */
+    .reveal-section {
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-section.from-right {
+      transform: translateX(250px);
+    }
+    .reveal-section.from-left {
+      transform: translateX(-250px);
+    }
+    .reveal-section.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Bi-directional Scroll Reveal */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+</style>
+</head>
+<body>
+
+  <!-- NEON OUTLINE BACKGROUND (Fixed & Behind 3D Canvas) -->
+
+  <!-- BACKGROUND IFRAME -->
+  <iframe src="BackgroundLogoV1.html" class="bg-iframe" title="Background Logo Animation"></iframe>
+
+        <nav class="main-nav" id="mainNav" style="pointer-events:auto;">
+    <div class="nav-ticker"><div class="nav-ticker-inner"></div></div>
+    <div class="nav-inner">
+      <a href="Landing.html" class="nav-logo hover-float">
+        <span class="logo-bracket">[</span>
+        <div>
+          <div class="logo-text">Umuzi</div>
+        </div>
+        <span class="logo-bracket">]</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <!-- ADDED HOME LINK HERE RIGHT AFTER THE LOGO -->
+        <li><a href="Home.html" class="no-sub"><span class="desktop-prefix">//</span> Home</a></li>
+
+        <li data-mega="who">
+            <a href="who-we-are.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Who We Are <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="our-people.html">Our People</a></li>
+                <li><a href="our-story.html">Our Story</a></li>
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="open-roles.html">Open Roles</a></li>
+            </ul>
+        </li>
+
+        <li><a href="partner-with-us.html" class="no-sub"><span class="desktop-prefix">//</span> Partner With Us</a></li>
+        <li><a href="our-impact.html" class="no-sub"><span class="desktop-prefix">//</span> Impact</a></li>
+        
+        <li data-mega="community">
+            <a href="community.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Community <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="community.html">Journey With Us</a></li>
+                <li><a href="what-to-expect.html">What to Expect</a></li>
+                <li><a href="types-of-opportunities.html">Types of Opportunities</a></li>
+                <li><a href="apply-now.html">Apply Now</a></li>
+            </ul>
+        </li>
+
+        <li data-mega="involved">
+            <a href="donate.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Get Involved <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="careers.html">Careers</a></li>
+                <li><a href="donate.html">Donations</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </li>
+
+        <li data-mega="insights">
+            <a href="insights.html" class="has-sub">
+                <i class="bi bi-chevron-down chevron-icon"></i> <span class="desktop-prefix">//</span> Insights <i class="bi bi-chevron-down desktop-chevron"></i>
+            </a>
+            <ul class="mobile-sub">
+                <li><a href="insights.html#thought-leadership">Thought Leadership</a></li>
+                <li><a href="insights.html">Impact Reports</a></li>
+            </ul>
+        </li>
+
+        <li class="mobile-nav-footer-container">
+            <div class="mobile-nav-footer">
+                <hr class="mobile-nav-divider">
+                <div class="mobile-nav-ctas">
+                    <a href="donate.html" class="btn-hud outline">Donate <i class="bi bi-arrow-up-right"></i></a>
+                    <a href="apply-now.html" class="btn-hud filled">Apply <i class="bi bi-arrow-up-right"></i></a>
+                </div>
+            </div>
+        </li>
+      </ul>
+
+      <div class="nav-ctas">
+        <a href="donate.html" class="btn-hud outline hover-float">Donate</a>
+        <a href="apply-now.html" class="btn-hud filled hover-float">Apply Now</a>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle"><i class="bi bi-list"></i></button>
+    </div>
+  </nav>
+
+    <!-- DESKTOP MEGA MENUS -->
+    <!-- DESKTOP MEGA MENUS -->
+  <div class="mega-menu" id="mega-who">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_01</div>
+        <div class="mega-title">Who We Are</div>
+        <div class="mega-desc">Meet the people, purpose, and philosophy behind Umuzi. A global community enabling human potential through technology.</div>
+        <a href="who-we-are.html" class="mega-cta">Explore Module <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="our-people.html" class="mega-link"><h4>Our People</h4><p>Meet the team building tomorrow.</p><span class="mega-link-arr">Access <i class="bi bi-arrow-right"></i></span></a>
+        <a href="our-story.html" class="mega-link"><h4>Our Story</h4><p>How Umuzi grew from an idea.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="careers.html" class="mega-link"><h4>Careers</h4><p>What it's like to work at Umuzi.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="open-roles.html" class="mega-link"><h4>Open Roles</h4><p>Current positions available now.</p><span class="mega-link-arr">Apply <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-community">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_02</div>
+        <div class="mega-title">Community</div>
+        <div class="mega-desc">Join the Umuzi community. Explore opportunities for young people and discover powerful learning-to-earning journeys.</div>
+        <a href="community.html" class="mega-cta">Join Now <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="community.html" class="mega-link"><h4>Journey With Us</h4><p>Our three-part learning model.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="what-to-expect.html" class="mega-link"><h4>What to Expect</h4><p>A powerful earning journey.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="types-of-opportunities.html" class="mega-link"><h4>Types of Opportunities</h4><p>Diverse high-quality programmes.</p><span class="mega-link-arr">Browse <i class="bi bi-arrow-right"></i></span></a>
+        <a href="apply-now.html" class="mega-link"><h4>Apply Now</h4><p>Join in a few simple steps.</p><span class="mega-link-arr">Start <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-involved">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_03</div>
+        <div class="mega-title">Get Involved</div>
+        <div class="mega-desc">Whether you want to partner, fund, mentor or give-discover how you can play a role in building a more equitable, opportunity-rich future.</div>
+        <a href="donate.html" class="mega-cta">Discover How <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="careers.html" class="mega-link"><h4>Careers</h4><p>Work at Umuzi — explore open roles.</p><span class="mega-link-arr">Explore <i class="bi bi-arrow-right"></i></span></a>
+        <a href="donate.html" class="mega-link"><h4>Donations</h4><p>Fund specific needs and programmes.</p><span class="mega-link-arr">Donate <i class="bi bi-arrow-right"></i></span></a>
+        <a href="contact.html" class="mega-link"><h4>Contact Us</h4><p>Get in touch with the team.</p><span class="mega-link-arr">Contact <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mega-menu" id="mega-insights">
+    <div class="mega-inner">
+      <div>
+        <div class="mega-label">// MODULE_04</div>
+        <div class="mega-title">Insights</div>
+        <div class="mega-desc">Articles, research, and real-world reflections from the frontlines of education and technology.</div>
+        <a href="insights.html" class="mega-cta">Read All <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+      <div class="mega-links">
+        <a href="insights.html#thought-leadership" class="mega-link"><h4>Thought Leadership</h4><p>Perspectives from our team.</p><span class="mega-link-arr">Read <i class="bi bi-arrow-right"></i></span></a>
+        <a href="insights.html" class="mega-link"><h4>Impact Reports</h4><p>Access our latest reports.</p><span class="mega-link-arr">Download <i class="bi bi-arrow-right"></i></span></a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+     <section class="hero" style="background-image: url('assets/Images/partner-cover.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+       <div class="container">
+         <div class="breadcrumbs">
+           <a href="Home.html">Home</a> <span>/</span> <span>Partner with us</span>
+         </div>
+         <h1>Invest in social capital at scale</h1>
+         <p>>_ From future-ready talent pipelines to scalable learning systems, our partnerships bridge social impact and strategic outcomes. Work with us to enable human potential while meeting the evolving needs of your organisation.</p>
+
+         <div style="margin-top: 40px; border-top: 1px solid var(--border-c); padding-top: 30px;">
+           <p style="font-family: var(--jet); font-size: 13px; line-height: 1.8; color: rgba(0,245,255,0.7); max-width: 900px; margin-bottom: 20px;">
+             Umuzi is a global community building pathways to livelihoods. We work with leading employers, governments, and development partners to design scalable, demand-driven workforce solutions that connect emerging talent to real economic opportunity.
+           </p>
+           <p style="font-family: var(--jet); font-size: 13px; line-height: 1.8; color: rgba(0,245,255,0.7); max-width: 900px; margin-bottom: 20px;">
+             Through our <span style="color: var(--cyan); font-weight: bold;">Skills</span>, <span style="color: var(--magenta); font-weight: bold;">Experience</span>, and <span style="color: var(--green); font-weight: bold;">Launch Labs</span>, we design and deliver world-class learning journeys creating full-stack employability and sustainable livelihoods.
+           </p>
+           <p style="font-family: var(--jet); font-size: 13px; line-height: 1.8; color: rgba(0,245,255,0.7); max-width: 900px; margin-bottom: 30px;">
+             Whether you're funding impact, building inclusive talent pipelines, or shaping future-fit industries, Umuzi brings deep expertise, data-driven insight, and a strong track record of delivery.
+           </p>
+           <a href="contact.html" class="btn-hud outline">Contact Us <i class="bi bi-arrow-up-right"></i></a>
+         </div>
+       </div>
+     </section>
+
+     <!-- GET IN TOUCH CARDS -->
+     <section class="reveal-section from-right" style="background: rgba(0, 5, 12, 0.6); border-top: 1px solid var(--border-c); border-bottom: 1px solid var(--border-c);">
+       <div class="container">
+         <div class="section-label" style="justify-content: center; color: var(--cyan);">SYS.INT // QUICK_CONNECT</div>
+         <h2 class="section-heading" style="text-align: center;">Already know what you're looking for? Get in touch</h2>
+         
+          <div class="hud-grid" style="margin-top: 40px; grid-template-columns: repeat(4, 1fr);">
+            <div class="hud-panel" data-purpose="fund-partner" style="background: linear-gradient(to top, rgba(0,5,15,0.9) 0%, rgba(0,5,15,0.35) 55%, rgba(0,5,15,0.15) 100%);">
+              <div class="icon"><i class="bi bi-heart"></i></div>
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Fund or Partner with Umuzi</h3>
+              <p class="card-clamp">We work with funders, corporates, and ecosystem partners to design and deliver skills development programmes that create real outcomes for young people.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="project-support" style="background: linear-gradient(to top, rgba(10,2,12,0.9) 0%, rgba(10,2,12,0.35) 55%, rgba(10,2,12,0.2) 100%); border-top-color: var(--magenta);">
+              <div class="icon" style="color:var(--magenta); border-color:var(--magenta); box-shadow:var(--glow-m);"><i class="bi bi-diagram-3"></i></div>
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Get Project Support or Extra Capacity</h3>
+              <p class="card-clamp">Access vetted emerging talent to support your team or deliver defined projects. Whether you need extra hands for a period of time or a specific output delivered.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="find-talent" style="background: linear-gradient(to top, rgba(2,12,8,0.9) 0%, rgba(2,12,8,0.35) 55%, rgba(2,12,8,0.2) 100%); border-top-color: var(--green);">
+              <div class="icon" style="color:var(--green); border-color:var(--green); box-shadow:var(--glow-g);"><i class="bi bi-person-check"></i></div>
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Find the talent you need</h3>
+              <p class="card-clamp">Access our network of vetted, skilled, workplace-ready talent across a vast field of qualifications. If you have a specific need, let's touch base.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="mentor" style="background: linear-gradient(to top, rgba(0,5,15,0.9) 0%, rgba(0,5,15,0.35) 55%, rgba(0,5,15,0.15) 100%); border-top-color: var(--cyan);">
+              <div class="icon" style="color:var(--cyan); border-color:var(--cyan); box-shadow:var(--glow-c);"><i class="bi bi-people"></i></div>
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px;">Mentor A Young Professional</h3>
+              <p class="card-clamp">Join our low-barrier, high-impact mentorship initiative and support a young person navigating their career. Whether you're an individual or representing a team.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+          </div>
+       </div>
+     </section>
+
+     <!-- DEEPER UNDERSTANDING -->
+     <section class="reveal-section from-left">
+       <div class="container">
+         <h2 class="section-heading" style="text-align: center;">Need a deeper understanding?<br>Explore the potential</h2>
+         
+          <div class="hud-grid" style="margin-top: 40px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <div class="hud-panel" data-purpose="market" data-img="assets/Images/Market Analysis & Skills Scoping.png" style="background: linear-gradient(to top, rgba(0,5,15,0.9) 0%, rgba(0,5,15,0.35) 55%, rgba(0,5,15,0.15) 100%), url('assets/Images/Market Analysis & Skills Scoping.png') center/cover no-repeat;">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--cyan);">1. Market Analysis & Skills Scoping</h3>
+              <p class="card-clamp">We conduct skills needs analyses across sectors and geographies to help our partners understand current gaps, future trends, and practical solutions. These insights feed directly into curriculum design and workforce development strategy.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="operational" data-img="assets/Images/Operational Research & Insights.png" style="background: linear-gradient(to top, rgba(10,2,12,0.9) 0%, rgba(10,2,12,0.35) 55%, rgba(10,2,12,0.2) 100%), url('assets/Images/Operational Research & Insights.png') center/cover no-repeat; border-top-color: var(--magenta);">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--magenta);">2. Operational Research & Insights</h3>
+              <p class="card-clamp">Using our internal and partner-linked data tools, we generate meaningful, real-time insights into learner journeys, programme efficacy, and long-term impact. Our reporting meets the needs of funders, boards, and operational leads alike.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="recruitment" data-img="assets/Images/Recruitment & Assessment.png" style="background: linear-gradient(to top, rgba(2,12,8,0.9) 0%, rgba(2,12,8,0.35) 55%, rgba(2,12,8,0.2) 100%), url('assets/Images/Recruitment & Assessment.png') center/cover no-repeat; border-top-color: var(--green);">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--green);">3. Recruitment & Assessment</h3>
+              <p class="card-clamp">We source, screen, and select high-potential young people through a rigorous, multi-step process that prioritises aptitude, potential, and alignment over conventional credentials.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="pathway" data-img="assets/Images/Pathway Design & Delivery.png" style="background: linear-gradient(to top, rgba(0,5,15,0.9) 0%, rgba(0,5,15,0.35) 55%, rgba(0,5,15,0.15) 100%), url('assets/Images/Pathway Design & Delivery.png') center/cover no-repeat;">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--cyan);">4. Pathway Design & Delivery</h3>
+              <p class="card-clamp">We develop and deliver high-quality, partner-aligned learning-to-earning pathways, ranging from accredited learnerships to agile, future-focused programmes in digital, green, and entrepreneurial sectors. Each programme is designed with a clear line of sight to employment, business growth and impact.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="project" data-img="assets/Images/Project Management & Consulting.png" style="background: linear-gradient(to top, rgba(10,2,12,0.9) 0%, rgba(10,2,12,0.35) 55%, rgba(10,2,12,0.2) 100%), url('assets/Images/Project Management & Consulting.png') center/cover no-repeat; border-top-color: var(--magenta);">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--magenta);">5. Project Management & Consulting</h3>
+              <p class="card-clamp">We provide implementation support and strategic advisory across programme lifecycles. From pilot to scale, we help partners operationalise skills strategies that are grounded in experience and aligned with regulatory and impact frameworks.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+            <div class="hud-panel" data-purpose="placement" data-img="assets/Images/Placement into Jobs & Gigs.png" style="background: linear-gradient(to top, rgba(2,12,8,0.9) 0%, rgba(2,12,8,0.35) 55%, rgba(2,12,8,0.2) 100%), url('assets/Images/Placement into Jobs & Gigs.png') center/cover no-repeat; border-top-color: var(--green);">
+              <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--green);">6. Placement into Jobs & Gigs</h3>
+              <p class="card-clamp">Our placement infrastructure connects skilled, vetted young professionals to real opportunities—whether short-term, freelance, or full-time. We support partners with tailored matchmaking, employer readiness, and outcome tracking.</p>
+              <span class="expand-btn">Read more</span>
+            </div>
+          </div>
+
+         <div style="text-align: center; margin-top: 60px;">
+           <p style="font-family: var(--orb); font-size: 1.2rem; color: #fff; text-shadow: var(--glow-c); margin-bottom: 24px;">If you're ready to shape the future of work. We would love to work with you.</p>
+           <a href="contact.html" class="btn-hud outline">Let's Talk <i class="bi bi-arrow-up-right"></i></a>
+         </div>
+       </div>
+     </section>
+
+     <!-- PARTNERS LOGOS -->
+     <section id="our-partners" class="reveal-section from-right" style="background: rgba(0, 5, 12, 0.6); border-top: 1px solid var(--border-c); border-bottom: 1px solid var(--border-c);">
+       <div class="container">
+         <h2 class="section-heading" style="text-align: center;">Our partners include</h2>
+         
+         <div class="logo-grid">
+           <div class="logo-box"><img src="assets/Images/Unicef Logo.png" alt="UNICEF"></div>
+           <div class="logo-box"><img src="assets/Images/sap logo.png" alt="SAP"></div>
+           <div class="logo-box"><img src="assets/Images/yoma logo.png" alt="YOMA"></div>
+           <div class="logo-box"><img src="assets/Images/Botnar logo.png" alt="FONDATION BOTNAR"></div>
+           <div class="logo-box"><img src="assets/Images/GenU Logo.png" alt="GENERATION UNLIMITED"></div>
+           <div class="logo-box"><img src="assets/Images/giz logo.png" alt="GIZ"></div>
+           <div class="logo-box"><img src="assets/Images/Naspers logo.png" alt="NASPERS"></div>
+           <div class="logo-box"><img src="assets/Images/IDC logo.png" alt="IDC"></div>
+           <div class="logo-box"><img src="assets/Images/BBD.png" alt="BBD"></div>
+           <div class="logo-box"><img src="assets/Images/Capitec Bank Logo.png" alt="CAPITEC"></div>
+           <div class="logo-box"><img src="assets/Images/Sanofi logo.png" alt="SANOFI"></div>
+           <div class="logo-box"><img src="assets/Images/coursera logo.png" alt="COURSERA"></div>
+           <div class="logo-box"><img src="assets/Images/Old Mutual logo.png" alt="OLD MUTUAL"></div>
+           <div class="logo-box"><img class="invert" src="assets/Images/VML logo.png" alt="VML"></div>
+           <div class="logo-box"><img src="assets/Images/sanlam logo.png" alt="SANLAM"></div>
+           <div class="logo-box"><img src="assets/Images/_Equal experts logo.png" alt="EQUAL EXPERTS"></div>
+           <div class="logo-box"><img src="assets/Images/Kariega logo.png" alt="KARIEGA FOUNDATION"></div>
+           <div class="logo-box"><img src="assets/Images/collectivex logo.png" alt="COLLECTIVE X"></div>
+           <div class="logo-box"><img src="assets/Images/bcx logo.png" alt="BCX"></div>
+           <div class="logo-box"><img src="assets/Images/ixo logo.png" alt="IXO"></div>
+           <div class="logo-box"><img src="assets/Images/Telkom logo.png" alt="TELKOM"></div>
+           <div class="logo-box"><img src="assets/Images/Project y logo.png" alt="PROJECT Y"></div>
+           <div class="logo-box"><img src="assets/Images/Accenture logo.png" alt="ACCENTURE"></div>
+         </div>
+       </div>
+     </section>
+
+     <!-- PARTNER MODELS (IMAGE + TEXT) -->
+     <section class="reveal-section from-left">
+       <div class="container">
+         <h2 class="section-heading" style="text-align: center; margin-bottom: 60px;">How we partner and the models behind it</h2>
+         
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3>Design &amp; Build A Custom Programme</h3>
+             <p>We work closely with you to co-create a bespoke learning-to-earning pathway - from curriculum development and learner recruitment to delivery, mentorship, and placement. This model is ideal for partners who want to directly shape the future of their workforce or support system-level change.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Design &amp; Build A Custom Programme.png');"></div>
+           </div>
+         </div>
+
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3 style="color: var(--magenta);">Fund An Active Programme</h3>
+             <p>Join us in scaling programmes that are already showing strong outcomes. Whether aligned to youth employment, gender equity, digital skills, or the green economy - we'll connect your funding to high-potential cohorts and provide rigorous impact reporting throughout.</p>
+             <p style="font-weight: bold; margin-bottom: 8px;">Whether you're a philanthropic donor or a strategic funder, you can help:</p>
+             <ul>
+               <li>Launch a full cohort aligned to specific sectors or regions</li>
+               <li>Sponsor one or many learners across a pathway</li>
+               <li>Back key components like data access, mentorship, or learner wellness</li>
+               <li>Plug into existing projects already delivering results</li>
+             </ul>
+             <p>Whatever your size, strategy, or sector, we'll co-create a solution that delivers shared value for you and for the communities we serve.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Fund An Active Programme.png');"></div>
+           </div>
+         </div>
+
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3 style="color: var(--green);">Host Experience Opportunities</h3>
+             <p>Through our Experience Lab, you can host project-based work, micro-internships, or short-term gigs for learners. This provides learners with essential real-world exposure - and gives your organisation access to skilled, supported talent on flexible terms.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Host Experience Opportunities.png');"></div>
+           </div>
+         </div>
+
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3>Hire Resources From Our Talent Network</h3>
+             <p>We maintain a curated pool of job-ready professionals trained in high-demand skills. Our Launch Lab offers talent matchmaking, interview support, and employer-readiness tools to ensure smooth integration and lasting impact.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Hire Resources from Our Talent Network.png');"></div>
+           </div>
+         </div>
+
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3 style="color: var(--magenta);">Mentor A Learner Or Team</h3>
+             <p>Join our mentorship network and contribute your expertise to the next generation of changemakers. This model is ideal for individuals or teams looking to share knowledge while deepening their organisation's commitment to inclusive development.</p>
+             <p style="font-weight: bold; color: var(--cyan);">Just 1 mentor, 2 conversations, 3 meaningful actions - that's all it takes to help build confidence, social capital, and access to opportunity.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Mentor a Learner or Team.png');"></div>
+           </div>
+         </div>
+         
+         <p style="text-align: center; font-family: var(--orb); font-size: 1.2rem; text-transform: uppercase; color: var(--green); text-shadow: var(--glow-g); margin-top: 40px; letter-spacing: 2px;">
+           Each partnership is a chance to do something meaningful, measurable, and transformative.
+         </p>
+
+       </div>
+     </section>
+
+     <!-- INNOVATION LAB (Don't see your use case) -->
+     <section class="reveal-section from-right" style="background: rgba(0, 5, 12, 0.6); border-top: 1px solid var(--border-c); border-bottom: 1px solid var(--border-c);">
+       <div class="container">
+         <h2 class="section-heading" style="text-align: center; margin-bottom: 60px;">Don't see your use case here?</h2>
+         
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3 style="color: var(--cyan);">Innovation Lab Partnership</h3>
+             <p>We're known for solving real problems in unexpected ways, whether it's designing a custom training programme for a new sector or piloting a model that's never been tried before.</p>
+             <p>If you have an idea - big or small - for something we haven't listed above, we want to hear it. Our Innovations team was built for this. We thrive on co-creation, experimentation, and delivering bold solutions to emerging challenges in the world of work. We've been ahead of the curve for over a decade. Let's keep pushing boundaries - together.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Innovation Lab Partnership.png');"></div>
+           </div>
+         </div>
+
+         <div class="feature-row">
+           <div class="feature-text">
+             <h3 style="color: var(--magenta);">Support A Learner, Fuel A Movement</h3>
+             <p>Sometimes the most powerful partnerships start with a small act of generosity.</p>
+             <p>Whether you're moved to sponsor one learner's monthly data stipend or ready to fund the systems that scale opportunity across countries, your support matters - and it makes a difference.</p>
+             <p>No amount is too small. Every contribution helps unlock real potential in real people.</p>
+           </div>
+           <div class="feature-img">
+             <div class="cyber-image-frame has-image" style="background-image: url('assets/Images/Support a Learner, Fuel a Movement.png');"></div>
+           </div>
+         </div>
+       </div>
+     </section>
+
+     <!-- VALUE TO PARTNERS -->
+     <section class="reveal-section from-left">
+       <div class="container">
+         <h2 class="section-heading" style="text-align: center; margin-bottom: 40px;">Our value to partners and funders</h2>
+         
+         <div class="hud-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+           <div class="hud-panel">
+             <div class="icon"><i class="bi bi-globe"></i></div>
+             <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--cyan);">Global Brand Equity</h3>
+             <ul>
+               <li>Align with a globally recognised youth empowerment brand</li>
+               <li>Engage in impact storytelling and shared reporting, backed by transparent data</li>
+               <li>Trusted by global tech companies, foundations, and governments</li>
+               <li>Documented ROI across enterprise, education, and employment value chains</li>
+             </ul>
+           </div>
+           <div class="hud-panel">
+             <div class="icon" style="color:var(--magenta); border-color:var(--magenta); box-shadow:var(--glow-m);"><i class="bi bi-diagram-3"></i></div>
+             <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--magenta);">Proven Model, Livelihoods-driven, Built to Scale</h3>
+             <ul>
+               <li>10,000+ youth engaged annually</li>
+               <li>70%+ placement rate in select programmes</li>
+               <li>Human-centred, tech-enabled</li>
+             </ul>
+           </div>
+           <div class="hud-panel">
+             <div class="icon" style="color:var(--green); border-color:var(--green); box-shadow:var(--glow-g);"><i class="bi bi-bezier2"></i></div>
+             <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--green);">Flexible Collaboration Models</h3>
+             <ul>
+               <li>Fund, mentor, co-create, or scale an existing programme</li>
+               <li>Leverage innovation partnerships to pilot new ideas with measurable community ROI</li>
+             </ul>
+           </div>
+           <div class="hud-panel">
+             <div class="icon" style="color:var(--cyan); border-color:var(--cyan); box-shadow:var(--glow-c);"><i class="bi bi-arrows-fullscreen"></i></div>
+             <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--cyan);">Workforce Growth and Development</h3>
+             <ul>
+               <li>Access to diverse, vetted talent: Remote-ready professionals trained across tech, green, tourism and innovation sectors</li>
+               <li>Custom-built pipelines for critical or scarce skills</li>
+               <li>Employer branding through high-impact youth development</li>
+             </ul>
+           </div>
+           <div class="hud-panel">
+             <div class="icon" style="color:var(--magenta); border-color:var(--magenta); box-shadow:var(--glow-m);"><i class="bi bi-geo-alt"></i></div>
+             <h3 style="font-size: 1.1rem; margin-bottom: 12px; color: var(--magenta);">Locally Contextual Advantages and Incentives</h3>
+             <ul>
+               <li>Co-funding models</li>
+               <li>Tax rebates and allowances</li>
+               <li>Public funding application support</li>
+             </ul>
+           </div>
+         </div>
+
+         <div style="text-align: center; margin-top: 60px;">
+           <h2 class="section-heading">Get in touch</h2>
+           <p style="font-family: var(--jet); font-size: 13px; color: rgba(255,255,255,0.6); max-width: 800px; margin: 0 auto 30px; line-height: 1.8;">Each partnership is a chance to do something meaningful, measurable, and transformative. If you're ready to shape the future of work - with impact and integrity - we'd love to work with you.</p>
+           <a href="contact.html" class="btn-hud filled">Contact Us <i class="bi bi-arrow-up-right"></i></a>
+         </div>
+       </div>
+     </section>
+
+   </main>
+
+      <footer class="cyber-footer" style="pointer-events:auto;">
+    <div class="footer-top">
+      <div class="f-nav-col">
+        <a href="careers.html" class="f-link" data-text="CAREERS">CAREERS</a>
+        <a href="community.html" class="f-link" data-text="LEARNERS">LEARNERS</a>
+        <a href="who-we-are.html" class="f-link" data-text="ABOUT">ABOUT</a>
+      </div>
+
+      <div class="f-center">
+        <div class="footer-logo hover-float">UMUZI</div>
+        <div class="footer-logo-sub">// Creating learning-to-earning pathways that serve people.</div>
+        <div class="social-row">
+          <a href="#" class="s-icon"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <div class="f-nav-col right">
+        <a href="partner-with-us.html" class="f-link" data-text="PARTNERS">PARTNERS</a>
+        <a href="our-impact.html" class="f-link" data-text="IMPACT">IMPACT</a>
+        <a href="contact.html" class="f-link" data-text="CONTACT">CONTACT</a>
+      </div>
+    </div>
+
+    <div class="f-divider"></div>
+
+    <div class="footer-bottom">
+      <div class="f-copy-links">
+        <a href="privacy-policy.html">Privacy Policy & PAIA</a>
+        <a href="cookie-policy.html">Cookie Settings</a>
+        <a href="privacy-policy.html">Terms</a>
+      </div>
+      <div class="f-year">[2026]</div>
+      <div class="f-credit">Designed by <span>SNM</span></div>
+    </div>
+  </footer>
+
+
+  <script>
+  'use strict';
+
+  // Mobile Toggle Dropdown Interaction
+  const mobileToggleBtn = document.getElementById('mobileToggle');
+  const navLinksMenu = document.getElementById('navLinks');
+  const mainNav = id => document.getElementById(id);
+  
+  if (mobileToggleBtn && navLinksMenu) {
+    mobileToggleBtn.addEventListener('click', () => {
+      navLinksMenu.classList.toggle('active');
+      mainNav('mainNav').classList.toggle('menu-open');
+      const icon = mobileToggleBtn.querySelector('i');
+      if (navLinksMenu.classList.contains('active')) {
+        icon.classList.replace('bi-list', 'bi-x');
+      } else {
+        icon.classList.replace('bi-x', 'bi-list');
+      }
+    });
+  }
+
+  // Mobile Sub-menu Accordion Toggle
+  document.querySelectorAll('.nav-links > li[data-mega] > a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (window.innerWidth <= 1100) {
+        // Only intercept when the chevron is tapped; otherwise let the link
+        // navigate to its direct destination (who-we-are / community / insights).
+        if (e.target.closest('.chevron-icon') || e.target.closest('.desktop-chevron')) {
+          e.preventDefault();
+          const li = this.parentElement;
+          li.classList.toggle('open');
+          const subMenu = li.querySelector('.mobile-sub');
+          if (subMenu) subMenu.classList.toggle('open');
+        }
+      }
+    });
+  });
+
+
+
+  // 1. Glitch Text on Links
+  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>';
+  document.querySelectorAll('.f-link').forEach(link => {
+    let iv = null;
+    link.addEventListener('mouseenter', () => {
+      const orig = link.dataset.text || link.textContent;
+      let iter = 0; clearInterval(iv);
+      iv = setInterval(() => {
+        link.textContent = orig.split('').map((ch, i) => i < iter ? orig[i] : CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
+        if (iter >= orig.length) clearInterval(iv); iter += 0.5;
+      }, 28);
+    });
+    link.addEventListener('mouseleave', () => { clearInterval(iv); link.textContent = link.dataset.text || link.textContent; });
+  });
+
+  // 2. Mega Menu Setup
+  (function() {
+    const triggers = document.querySelectorAll('[data-mega]');
+    const menus = {};
+    document.querySelectorAll('.mega-menu').forEach(m => menus[m.id] = m);
+    let active = null;
+
+    triggers.forEach(trigger => {
+      const id = 'mega-' + trigger.dataset.mega;
+      const menu = menus[id];
+      if (!menu) return;
+      trigger.addEventListener('mouseenter', () => {
+        if (active) active.classList.remove('open');
+        menu.classList.add('open'); active = menu;
+      });
+      menu.addEventListener('mouseleave', () => {
+        menu.classList.remove('open'); active = null;
+      });
+    });
+
+    document.querySelectorAll('.nav-links > li:not([data-mega]) > a').forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        if (active) { active.classList.remove('open'); active = null; }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && active) { active.classList.remove('open'); active = null; }
+    });
+  })();
+
+  // REVEAL ANIMATION OBSERVER
+  document.addEventListener('DOMContentLoaded', () => {
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observerOptions = { root: null, rootMargin: '0px 0px -100px 0px', threshold: 0.15 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    revealSections.forEach(section => observer.observe(section));
+  });
+
+  // Bi-directional Scroll Reveal Observer
+  document.addEventListener('DOMContentLoaded', () => {
+    const revealElements = document.querySelectorAll('.reveal');
+    const observerOptions = { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+    revealElements.forEach(el => observer.observe(el));
+  });
+
+  // Add cyan-tint class to all partner logos, swap to neon-green-tint on hover
+  document.querySelectorAll('.logo-box img').forEach(img => {
+    const isInvert = img.classList.contains('invert');
+    const baseClass = isInvert ? 'invert cyan-tint' : 'cyan-tint';
+    const hoverClass = isInvert ? 'invert neon-green-tint' : 'neon-green-tint';
+    img.classList.add('cyan-tint');
+    img.addEventListener('mouseenter', () => {
+      img.classList.remove('cyan-tint');
+      img.classList.add('neon-green-tint');
+    });
+    img.addEventListener('mouseleave', () => {
+      img.classList.remove('neon-green-tint');
+      img.classList.add('cyan-tint');
+    });
+  });
+
+  // Purpose Modal (cards expand)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.hud-panel[data-purpose]').forEach(card => {
+      card.addEventListener('click', () => {
+        const img = card.getAttribute('data-img');
+        document.getElementById('purpose-title').textContent = card.querySelector('h3').textContent;
+        document.getElementById('purpose-text').textContent = card.querySelector('p').textContent;
+        document.getElementById('purpose-modal-content').style.background =
+          'linear-gradient(to top, rgba(0,5,15,0.92) 0%, rgba(0,5,15,0.55) 60%, rgba(0,5,15,0.25) 100%), url(\'' + img + '\') center/cover no-repeat';
+        document.getElementById('purpose-modal').classList.add('active');
+      });
+    });
+    document.getElementById('purpose-modal-close').addEventListener('click', () =>
+      document.getElementById('purpose-modal').classList.remove('active'));
+    document.getElementById('purpose-modal').addEventListener('click', e => {
+      if (e.target.id === 'purpose-modal') document.getElementById('purpose-modal').classList.remove('active');
+    });
+  });
+
+  </script>
+
+  <!-- PURPOSE MODAL (Cards expand) -->
+  <div class="purpose-modal" id="purpose-modal">
+    <div class="purpose-modal-content" id="purpose-modal-content">
+      <button type="button" class="purpose-modal-close" id="purpose-modal-close"><i class="bi bi-x-lg"></i></button>
+      <h3 id="purpose-title"></h3>
+      <p id="purpose-text"></p>
+    </div>
+  </div>
+</body>
+</html>

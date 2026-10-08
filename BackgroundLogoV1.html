@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>background Logo</title>
+  <link rel="icon" type="image/svg+xml" href="assets/Images/UMUZI_Logo.svg">
+
+    <style>
+        /* ── RESET & ROOT ─────────────────────── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            /* Matched exactly to the 3D Knot color */
+            --cyan:     #00f3ff;
+            --black:    #00060f;
+        }
+
+        /* ══ BACKGROUND FROM LOGIN PAGE ══════════════════════════════ */
+        body {
+            background-color: #050a10;
+            overflow: hidden;
+            /* Approximating the background ray effect with CSS gradients */
+            background-image: 
+                radial-gradient(circle at 30% 60%, rgba(0, 150, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 70% 30%, rgba(0, 150, 255, 0.15) 0%, transparent 40%),
+                conic-gradient(from 180deg at 50% 50%, #050a10 0deg, #0a1f3c 45deg, #050a10 90deg, #0c2a52 135deg, #050a10 180deg, #081e3a 225deg, #050a10 270deg, #0a2649 315deg, #050a10 360deg);
+        }
+
+        /* Diagonal Light rays to mimic the image background */
+        .bg-rays {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            background: 
+                linear-gradient(45deg, transparent 40%, rgba(0, 180, 255, 0.1) 45%, transparent 50%),
+                linear-gradient(-45deg, transparent 30%, rgba(0, 180, 255, 0.15) 35%, transparent 40%),
+                linear-gradient(15deg, transparent 60%, rgba(0, 150, 255, 0.08) 65%, transparent 70%);
+            filter: blur(8px);
+            pointer-events: none; /* Added to ensure it doesn't block 3D canvas interactions */
+        }
+        
+        /* ══ CANVAS ══════════════════════════════════════ */
+        #three-canvas { 
+            position: fixed; 
+            inset: 0; 
+            /* Placed in the same layer as the text */
+            z-index: 1; 
+            pointer-events: none; 
+            background: transparent;
+        }
+
+        /* ══ NEON ANIMATED UMUZI TEXT ═════════════════════════════════ */
+        .neon-bg-umuzi {
+            position: fixed; 
+            top: 79%; /* Pushed down to guarantee no visual overlap with the knot */
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 80%; 
+            max-width: 800px; 
+            opacity: 1.0; /* Increased opacity for maximum glow */
+            pointer-events: none; 
+            /* Placed in the same layer as the canvas */
+            z-index: 1; 
+            background: transparent;
+        }
+
+        .neon-bg-umuzi svg {
+            /* CRITICAL FIX: Prevents the SVG bounding box from clipping the glow and creating a sharp rectangle artifact */
+            overflow: visible;
+            display: block;
+        }
+        
+        .neon-bg-umuzi .line {
+            stroke: var(--cyan); 
+            stroke-width: 2.5; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+            fill: none;
+            /* Only the text strokes will glow now, without bleeding into a solid clipped box */
+            filter: drop-shadow(0 0 5px var(--cyan)) 
+                    drop-shadow(0 0 15px var(--cyan)) 
+                    drop-shadow(0 0 25px rgba(0, 243, 255, 0.8));
+        }
+        @media (max-width: 768px) {
+      .cyber-image-frame { min-height: 240px; }
+      .modal-image-frame { min-height: 240px; }
+    }
+
+</style>
+</head>
+<body>
+
+    <!-- LIGHT RAYS BACKGROUND -->
+    <div class="bg-rays"></div>
+
+    <!-- NEON OUTLINE BACKGROUND TEXT -->
+    <div class="neon-bg-umuzi">
+        <svg viewBox="0 0 400 120">
+            <g>
+                <path class="line" d="M 10,20 V 70 C 10,86.5 23.5,100 40,100 C 56.5,100 70,86.5 70,70 V 20 H 50 V 70 C 50,75.5 45.5,80 40,80 C 34.5,80 30,75.5 30,70 V 20 Z" />
+                <path class="line" d="M 90,100 V 50 A 30 30 0 0 1 140 27.5 A 30 30 0 0 1 190 50 V 100 H 170 V 50 A 10 10 0 0 0 150 50 V 100 H 130 V 50 A 10 10 0 0 0 110 50 V 100 Z" />
+                <path class="line" d="M 210,20 V 70 C 210,86.5 223.5,100 240,100 C 256.5,100 270,86.5 270,70 V 20 H 250 V 70 C 250,75.5 245.5,80 240,80 C 234.5,80 230,75.5 230,70 V 20 Z" />
+                <path class="line" d="M 290,20 H 350 V 40 L 315,80 H 350 V 100 H 290 V 80 L 325,40 H 290 Z" />
+                <path class="line" d="M 370,20 H 390 V 100 H 370 Z" />
+            </g>
+        </svg>
+    </div>
+
+    <!-- 3D BACKGROUND KNOT CANVAS -->
+    <canvas id="three-canvas"></canvas>
+
+
+    <!-- THREE.JS & ORBIT CONTROLS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- ANIME.JS FOR SVG LINE DRAWING -->
+    <script type="module">
+        import { animate, svg, stagger } from 'https://esm.sh/animejs';
+
+        animate(svg.createDrawable('.neon-bg-umuzi .line'), {
+            draw: ['0 0', '0 1', '1 1'],
+            ease: 'inOutQuad',
+            duration: 3000,
+            delay: stagger(50),
+            loop: true
+        });
+    </script>
+
+    <!-- 3D KNOT RENDERING LOGIC -->
+    <script>
+        'use strict';
+
+        // Setup Scene, Camera, and Renderer
+        const canvas = document.getElementById('three-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        const scene = new THREE.Scene();
+        // Removed Fog to ensure the canvas background doesn't color-tint and perfectly matches the DOM body background
+        
+        const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 300);
+        camera.position.set(0, 3, 25);
+        
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; 
+        controls.autoRotate = true; 
+        controls.autoRotateSpeed = 1.8;
+        controls.enableZoom = false; 
+        controls.enablePan = false;
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; 
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Removed Point Lights and Glowing Background Stars to ensure ONLY the UMUZI text glows
+
+        // 3D KNOT GENERATION
+        const KNOT_GRP = new THREE.Group();
+        scene.add(KNOT_GRP);
+        KNOT_GRP.position.set(0, -1.0, 0); 
+
+        const S_knot_main = 0.07; 
+        const knotColorMain = 0x00f3ff;
+
+        function buildMainShape(size) {
+            const shape = new THREE.Shape();
+            const D = 40.0 * size, Ro = 20.0 * size, Ri = 10.0 * size, SQRT3 = Math.sqrt(3), gap = 5.0 * size;      
+            const rightInnerX = Ri, rightInnerY = -Ri / SQRT3 + gap, rightOuterX = Ro, rightOuterY = (Ro - 2*Ri) / SQRT3 + gap;
+            const leftInnerX = -Ri, leftInnerY = (2*Ro + Ri) / SQRT3 + gap, leftOuterX = -Ro, leftOuterY = Ro * SQRT3 + gap;
+
+            shape.moveTo(rightOuterX, rightOuterY);
+            shape.lineTo(rightInnerX, rightInnerY);
+            shape.lineTo(rightInnerX, D);
+            shape.absarc(0, D, Ri, 0, Math.PI, false);
+            shape.lineTo(leftInnerX, leftInnerY);
+            shape.lineTo(leftOuterX, leftOuterY);
+            shape.lineTo(leftOuterX, D);
+            shape.absarc(0, D, Ro, Math.PI, 0, true);
+            return shape;
+        }
+
+        const extrudeSettingsMain = { 
+            depth: 7.0 * S_knot_main, 
+            bevelEnabled: true, 
+            bevelThickness: 0.3 * S_knot_main, 
+            bevelSize: 0.3 * S_knot_main, 
+            bevelSegments: 4, 
+            curveSegments: 80 
+        };
+        const geoKnotMain = new THREE.ExtrudeGeometry(buildMainShape(S_knot_main), extrudeSettingsMain);
+        
+        // Invisible dark base material to perfectly match the CSS background variable var(--black)
+        const matBaseMain = new THREE.MeshBasicMaterial({ color: 0x00060f }); 
+
+        for (let i = 0; i < 6; i++) {
+            const pivot = new THREE.Group();
+            pivot.rotation.z = -i * (Math.PI / 3); 
+            const col = knotColorMain; 
+            const pieceGrp = new THREE.Group();
+            pieceGrp.position.set(0, 0, -2.0 * S_knot_main);
+            
+            pieceGrp.add(new THREE.Mesh(geoKnotMain, matBaseMain));
+
+            // Setup edges
+            const eg = new THREE.EdgesGeometry(geoKnotMain, 20);
+            const lineMat = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 1.0, linewidth: 3 });
+
+            // Render the wireframe strokes multiple times with microscopic offsets to bypass WebGL thickness limits
+            const linesCenter = new THREE.LineSegments(eg, lineMat);
+            pieceGrp.add(linesCenter);
+
+            const linesOffset1 = new THREE.LineSegments(eg, lineMat);
+            linesOffset1.position.set(0.02, 0.02, 0);
+            pieceGrp.add(linesOffset1);
+
+            const linesOffset2 = new THREE.LineSegments(eg, lineMat);
+            linesOffset2.position.set(-0.02, -0.02, 0);
+            pieceGrp.add(linesOffset2);
+            
+            pivot.add(pieceGrp);
+            KNOT_GRP.add(pivot);
+        }
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+        function animateScene() {
+            requestAnimationFrame(animateScene);
+            const t = clock.getElapsedTime();
+            
+            // Hover animation
+            KNOT_GRP.position.y = 2.0 + Math.sin(t * 0.5) * 0.2;
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        animateScene();
+    </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sci-Fi Login UI with 3D Logo</title>
+  <link rel="icon" type="image/svg+xml" href="assets/Images/UMUZI_Logo.svg">
+    <!-- Import Google Fonts including Orbitron for the Logo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@900&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Base Reset & Setup --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif; min-height: 100vh; display: flex;
+            justify-content: center; align-items: center; background-color: #050a10;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 30% 60%, rgba(0, 150, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 70% 30%, rgba(0, 150, 255, 0.15) 0%, transparent 40%),
+                conic-gradient(from 180deg at 50% 50%, #050a10 0deg, #0a1f3c 45deg, #050a10 90deg, #0c2a52 135deg, #050a10 180deg, #081e3a 225deg, #050a10 270deg, #0a2649 315deg, #050a10 360deg);
+        }
+
+        .bg-rays {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;
+            background: 
+                linear-gradient(45deg, transparent 40%, rgba(0, 180, 255, 0.1) 45%, transparent 50%),
+                linear-gradient(-45deg, transparent 30%, rgba(0, 180, 255, 0.15) 35%, transparent 40%),
+                linear-gradient(15deg, transparent 60%, rgba(0, 150, 255, 0.08) 65%, transparent 70%);
+            filter: blur(8px);
+        }
+
+        /* TASK 1: Fixed Sci-Fi Back Arrow */
+        .back-link {
+            position: fixed; top: 30px; left: 30px; display: flex; align-items: center; gap: 8px;
+            padding: 12px 24px; background: rgba(0, 150, 255, 0.05); border: 1px solid #00e5ff;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            color: #00e5ff; font-family: 'Syncopate', sans-serif; font-size: 11px; font-weight: 700;
+            text-decoration: none; text-transform: uppercase; letter-spacing: 2px;
+            z-index: 100; transition: all 0.3s ease; backdrop-filter: blur(5px);
+        }
+        .back-link:hover {
+            background: #00e5ff; color: #00050a; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            transform: translateX(-5px);
+        }
+
+        /* TASK 2: Scaled down layout for 100% zoom match */
+        .page-container {
+            display: flex; flex-direction: row; align-items: center; justify-content: center;
+            gap: 120px; z-index: 10; width: 100%; max-width: 1200px; padding: 20px;
+            transform: scale(0.85); /* Scales the entire UI block down */
+            transform-origin: center center;
+        }
+
+        .logo-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 350px; }
+        .bg-logo-container { display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.95; margin-bottom: 20px; z-index: 2; }
+        .bg-logo-text { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: 16px; color: #00e5ff; margin-top: -15px; margin-right: -16px; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
+
+        .horizontal-link-arrow { display: flex; align-items: center; width: 100%; margin-top: 15px; opacity: 0.9; }
+        .horizontal-link-arrow .link-node { width: 12px; height: 12px; background: #e6f5fa; border-radius: 50%; box-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff; z-index: 2; }
+        
+        .horizontal-link-arrow .link-line { 
+            position: relative; overflow: hidden;
+            flex-grow: 1; height: 2px; background: rgba(0, 150, 255, 0.2); 
+            margin-left: -2px; z-index: 1; 
+        }
+        .horizontal-link-arrow .link-line::after {
+            content: ''; position: absolute; top: 0; left: -30px; width: 30px; height: 100%;
+            background: #00e5ff; box-shadow: 0 0 10px #00e5ff, 0 0 20px #ffffff;
+            animation: electric-pulse 1.5s linear infinite;
+        }
+        @keyframes electric-pulse {
+            0% { left: -30px; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+        
+        .horizontal-link-arrow .link-arrow { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 10px solid #e6f5fa; filter: drop-shadow(0 0 5px #00e5ff); }
+
+        .ui-wrapper { position: relative; width: 440px; height: 580px; }
+        .accent { position: absolute; width: 15px; height: 35px; background: rgba(10, 15, 30, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 2px 2px 10px rgba(0,0,0,0.5); z-index: 5; }
+        .accent-left-1 { top: 60px; left: -10px; clip-path: polygon(100% 0, 100% 100%, 0 85%, 0 15%); }
+        .accent-left-2 { top: 105px; left: -10px; clip-path: polygon(100% 0, 100% 100%, 0 85%, 0 15%); }
+        .accent-left-3 { top: 150px; left: -10px; clip-path: polygon(100% 0, 100% 100%, 0 85%, 0 15%); }
+        .accent-right-1 { bottom: 60px; right: -10px; clip-path: polygon(0 0, 0 100%, 100% 85%, 100% 15%); }
+        .accent-right-2 { bottom: 105px; right: -10px; clip-path: polygon(0 0, 0 100%, 100% 85%, 100% 15%); }
+        .accent-right-3 { bottom: 150px; right: -10px; clip-path: polygon(0 0, 0 100%, 100% 85%, 100% 15%); }
+
+        .panel-border {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 150, 255, 0.1);
+            clip-path: polygon(0 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 60px 100%, 0 calc(100% - 60px));
+            padding: 2px;
+            z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            overflow: hidden; 
+        }
+        .panel-border::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent 70%, #00e5ff 80%, #ff00ff 100%);
+            animation: spin-border 3s linear infinite;
+            z-index: -1;
+        }
+        @keyframes spin-border {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* TASK 3: Updated Background Color to match Hex #003e91 */
+        .panel-inner {
+            position: relative; width: 100%; height: 100%; 
+            background: rgba(0, 62, 145, 0.90); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            clip-path: polygon(0 0, calc(100% - 60px) 0, 100% 60px, 100% 100%, 60px 100%, 0 calc(100% - 60px));
+            padding: 40px; display: flex; flex-direction: column; overflow: hidden;
+        }
+        .panel-inner::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: -1; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .logo { 
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 32px; 
+            letter-spacing: 16px; color: #00ff88; margin-right: -16px; 
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); 
+            text-transform: uppercase; margin-bottom: 45px; 
+        }
+
+        .header-content h1 { 
+            font-family: 'Orbitron', sans-serif; color: #ff00ff; font-size: 24px; 
+            font-weight: 900; margin-bottom: 8px; text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+        .header-content p { color: #8c96a3; font-size: 10px; line-height: 1.4; max-width: 90%; margin-bottom: 35px; }
+
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; color: #00e5ff; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; text-shadow: 0 0 5px rgba(0, 229, 255, 0.3); }
+        .input-wrapper { position: relative; width: 100%; }
+
+        input {
+            width: 100%; background: rgba(4, 15, 30, 0.6); border: 1px solid rgba(0, 150, 255, 0.2); border-left: 3px solid #0096ff; 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+            padding: 14px 15px; color: #00e5ff; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: all 0.3s ease;
+        }
+        input::placeholder { color: rgba(0, 150, 255, 0.3); font-style: italic; }
+        input:focus { background: rgba(0, 30, 60, 0.8); border-color: #00e5ff; border-left: 3px solid #00e5ff; box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.2); }
+
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: rgba(0, 150, 255, 0.4); display: flex; align-items: center; transition: all 0.3s; }
+        .toggle-password:hover { color: #00e5ff; filter: drop-shadow(0 0 3px #00e5ff); }
+        .toggle-password svg { width: 16px; height: 16px; fill: currentColor; }
+
+        .submit-btn {
+            width: 100%; background: rgba(0, 150, 255, 0.05); color: #00e5ff; border: 1px solid #00e5ff;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            padding: 16px; font-family: 'Syncopate', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; margin-top: 15px; cursor: pointer; transition: all 0.3s ease; position: relative;
+        }
+        .submit-btn:hover { background: #00e5ff; color: #00050a; box-shadow: 0 0 25px rgba(0, 229, 255, 0.5); transform: translateY(-2px); }
+        .submit-btn:active { transform: scale(0.98); }
+
+        /* TASK 4: Mobile Responsiveness Logic */
+        @media (max-width: 900px) { 
+            body { overflow-y: auto; } /* Allow scrolling on smaller screens */
+            .back-link { top: 15px; left: 15px; padding: 8px 16px; font-size: 9px; }
+            .page-container { 
+                flex-direction: column; gap: 40px; 
+                transform: scale(1); /* Removes desktop zoom on mobile */
+                padding-top: 100px; padding-bottom: 40px;
+            } 
+            .logo-section { width: 100%; max-width: 300px; }
+            .ui-wrapper { width: 100%; max-width: 440px; height: auto; min-height: 580px; }
+            .horizontal-link-arrow { transform: rotate(90deg); width: 120px; margin: 30px auto; }
+        }
+        @media (max-width: 480px) {
+            .panel-inner { padding: 30px 20px; }
+        }
+        @media (max-width: 768px) {
+      .cyber-image-frame { min-height: 240px; }
+      .modal-image-frame { min-height: 240px; }
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="bg-rays"></div>
+
+    <!-- TASK 1: Top Left Back Arrow (Outside Container) -->
+    <a href="Landing.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        BACK TO SYSTEM
+    </a>
+
+    <div class="page-container">
+        <!-- Left Side: 3D Animated Logo -->
+        <div class="logo-section">
+            <div class="bg-logo-container">
+                <canvas id="bg-knot-canvas"></canvas>
+                <div class="bg-logo-text">UMUZI</div>
+            </div>
+            
+            <div class="horizontal-link-arrow">
+                <div class="link-node"></div>
+                <div class="link-line"></div>
+                <div class="link-arrow"></div>
+            </div>
+        </div>
+
+        <!-- Right Side: Login Panel -->
+        <div class="ui-wrapper">
+            <div class="accent accent-left-1"></div>
+            <div class="accent accent-left-2"></div>
+            <div class="accent accent-left-3"></div>
+            <div class="accent accent-right-1"></div>
+            <div class="accent accent-right-2"></div>
+            <div class="accent accent-right-3"></div>
+
+            <div class="panel-border">
+                <div class="panel-inner">
+                    
+                    <div class="logo">
+                        UMUZI
+                    </div>
+
+                    <div class="header-content">
+                        <h1>Login with ADMIN</h1>
+                        <p>Welcome to UMUZI ADMIN login</p>
+                    </div>
+
+                    <form id="adminLoginForm">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="emailInput" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="passwordInput" placeholder="Enter your password" required>
+                                <button type="button" class="toggle-password" id="togglePassword">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                        <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 92.9-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.8-35.7-46.1-87.7-92.9-131.1C433.5 68.8 368.8 32 288 32zM128 256a160 160 0 1 1 320 0 160 160 0 1 1 -320 0zm286.6 22.6l-29.8 29.8c2.5-7.2 3.9-15 3.9-23.1c0-39.7-32.3-72-72-72c-8.1 0-15.9 1.4-23.1 3.9l-29.8-29.8c16.2-9.4 35.3-14.9 55.6-14.9c61.8 0 112 50.2 112 112c0 20.3-5.5 39.4-14.9 55.6zM264.4 293.4l29.8-29.8c-2.5 7.2-3.9 15-3.9 23.1c0 39.7 32.3 72 72 72c8.1 0 15.9-1.4 23.1-3.9l29.8 29.8c-16.2 9.4-35.3 14.9-55.6 14.9c-61.8 0-112-50.2-112-112c0-20.3 5.5-39.4 14.9-55.6zM3.4 86.6c-4.5-4.5-4.5-11.9 0-16.5l22.6-22.6c4.5-4.5 11.9-4.5 16.5 0L556.1 501.1c4.5 4.5 4.5 11.9 0 16.5l-22.6 22.6c-4.5 4.5-11.9 4.5-16.5 0L3.4 86.6z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">System Login</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // --- AUTHENTICATION SCRIPT ---
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Trim whitespace and force email to lowercase to prevent accidental mismatches
+            const email = document.getElementById('emailInput').value.trim().toLowerCase();
+            const pass = document.getElementById('passwordInput').value.trim();
+
+            const hashCredentials = (usr, pwd) => btoa(usr + ":" + pwd).split('').reverse().join('');
+            const hashedInput = hashCredentials(email, pass);
+
+            // Hashed Allowed Admins 
+            const allowedHashes = [
+                "=Ejbp1GZBpzZy9mLppXdtVHQx4WatRWY", 
+                "=Ijbp1GZBpzZy9mLppXdtVHQy4WatRWY", 
+                "=Mjbp1GZBpzZy9mLppXdtVHQz4WatRWY", 
+                "=Qjbp1GZBpzZy9mLppXdtVHQ04WatRWY"  
+            ];
+
+            if (allowedHashes.includes(hashedInput)) {
+                // Grant Access: Set session token and redirect explicitly to ADMIN UPDATE PANE.html
+                sessionStorage.setItem('umuzi_auth_token', 'valid_session_x892j');
+                window.location.href = 'ADMIN UPDATE PANE.html';
+            } else {
+                alert("ACCESS DENIED // INVALID CREDENTIALS");
+            }
+        });
+
+        // --- PASSWORD TOGGLE ---
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('passwordInput');
+
+        togglePassword.addEventListener('click', function (e) {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            if(type === 'text') {
+                this.style.color = '#00e5ff'; 
+            } else {
+                this.style.color = 'rgba(0, 150, 255, 0.4)'; 
+            }
+        });
+
+        // --- 3D KNOT ANIMATION ---
+        function initKnot(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(size, size);
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+            camera.position.set(0, 0, 10);
+            
+            scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            const pointLight = new THREE.PointLight(0x00f5ff, 2, 20);
+            pointLight.position.set(2, 2, 5);
+            scene.add(pointLight);
+            
+            const KNOT_GRP = new THREE.Group();
+            scene.add(KNOT_GRP);
+            
+            const NEON = [0x00ffff, 0xff00ff, 0x00ff88];
+            const S_knot = 0.05; 
+            
+            function buildShape() {
+                const shape = new THREE.Shape();
+                const D = 40.0 * S_knot, Ro = 20.0 * S_knot, Ri = 10.0 * S_knot, SQRT3 = Math.sqrt(3), gap = 3.0 * S_knot;      
+                const rightInnerX = Ri, rightInnerY = -Ri / SQRT3 + gap, rightOuterX = Ro, rightOuterY = (Ro - 2*Ri) / SQRT3 + gap;
+                const leftInnerX = -Ri, leftInnerY = (2*Ro + Ri) / SQRT3 + gap, leftOuterX = -Ro, leftOuterY = Ro * SQRT3 + gap;
+
+                shape.moveTo(rightOuterX, rightOuterY);
+                shape.lineTo(rightInnerX, rightInnerY);
+                shape.lineTo(rightInnerX, D);
+                shape.absarc(0, D, Ri, 0, Math.PI, false);
+                shape.lineTo(leftInnerX, leftInnerY);
+                shape.lineTo(leftOuterX, leftOuterY);
+                shape.lineTo(leftOuterX, D);
+                shape.absarc(0, D, Ro, Math.PI, 0, true);
+                return shape;
+            }
+
+            const hookShape = buildShape();
+            const extrudeSettings = { depth: 4.0 * S_knot, bevelEnabled: true, bevelThickness: 0.3 * S_knot, bevelSize: 0.3 * S_knot, bevelSegments: 4, curveSegments: 40 };
+            const geoKnot = new THREE.ExtrudeGeometry(hookShape, extrudeSettings);
+            const matBase = new THREE.MeshStandardMaterial({ color: 0x020d1c, emissive: 0x000a18, roughness: 0.15 });
+            
+            for (let i = 0; i < 6; i++) {
+                const pivot = new THREE.Group();
+                pivot.rotation.z = -i * (Math.PI / 3); 
+                const colIdx = i % 3;
+                const col = NEON[colIdx];
+
+                const pieceGrp = new THREE.Group();
+                pieceGrp.position.set(0, 0, -2.0 * S_knot);
+                
+                const body = new THREE.Mesh(geoKnot, matBase);
+                pieceGrp.add(body);
+                
+                const wm = new THREE.Mesh(geoKnot, new THREE.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.5 }));
+                wm.scale.setScalar(1.02);
+                pieceGrp.add(wm);
+                
+                pivot.add(pieceGrp);
+                KNOT_GRP.add(pivot);
+            }
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                KNOT_GRP.rotation.y += 0.012;
+                KNOT_GRP.rotation.z += 0.006;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        window.addEventListener('load', () => {
+            initKnot('bg-knot-canvas', 300);
+        });
+    </script>
+</body>
+</html>

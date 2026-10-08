@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMUZI // NEURAL-NET HUD & HOMEPAGE</title>
+<link rel="icon" type="image/svg+xml" href="assets/Images/UMUZI_Logo.svg">
+
+<!-- Fonts & CSS Libraries -->
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syncopate:wght@700&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<style>
+/* ── RESET & ROOT ────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cyan:     #00f5ff;
+  --magenta:  #ff00cc;
+  --green:    #00ff88;
+  --yellow:   #ffe600;
+  --navy:     #000d1a;
+  --black:    #00060f;
+  --glass:    rgba(0, 20, 45, 0.55);
+  --glass2:   rgba(0, 10, 25, 0.75);
+  --border-c: rgba(0, 245, 255, 0.35);
+  --border-m: rgba(255, 0, 204, 0.35);
+  --border-g: rgba(0, 255, 136, 0.35);
+  --glow-c:   0 0 8px #00f5ff, 0 0 20px rgba(0,245,255,0.4), 0 0 40px rgba(0,245,255,0.15);
+  --glow-m:   0 0 8px #ff00cc, 0 0 20px rgba(255,0,204,0.4), 0 0 40px rgba(255,0,204,0.15);
+  --glow-g:   0 0 8px #00ff88, 0 0 20px rgba(0,255,136,0.4);
+  --mono:     'Share Tech Mono', monospace;
+  --orb:      'Orbitron', sans-serif;
+  --jet:      'JetBrains Mono', monospace;
+  --nav-h:    64px;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  width: 100%; min-height: 100vh; overflow-x: hidden;
+  background: var(--black);
+  font-family: var(--mono); color: #fff;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; padding: 0; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 10; }
+
+/* ══ HERO SECTION & 3D CANVAS ══════════════════════════════════ */
+#hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#three-canvas { position: absolute; inset: 0; z-index: 1; }
+
+body::after {
+  content: "";
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  animation: scanMove 8s linear infinite;
+}
+@keyframes scanMove { from { background-position: 0 0; } to { background-position: 0 100px; } }
+
+/* ══ HUD FRAME ════════════════════════════════════════════════ */
+.hud-frame { position: absolute; inset: 12px; z-index: 5; pointer-events: none; }
+
+.hud-frame__outer {
+  position: absolute; inset: 0;
+  border: 1px solid var(--border-c);
+  box-shadow: inset 0 0 60px rgba(0,245,255,0.03), var(--glow-c);
+  clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
+}
+
+.hud-corner {
+  position: absolute; width: 28px; height: 28px;
+  border-color: var(--cyan); border-style: solid;
+  box-shadow: var(--glow-c);
+  animation: cornerPulse 3s ease-in-out infinite;
+}
+@keyframes cornerPulse {
+  0%, 100% { opacity: 1; box-shadow: var(--glow-c); }
+  50% { opacity: 0.6; box-shadow: 0 0 4px var(--cyan); }
+}
+.hud-corner.tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; }
+.hud-corner.tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; }
+.hud-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; }
+.hud-corner.br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; }
+
+.target-brackets {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px; height: 220px;
+  animation: bracketSpin 20s linear infinite;
+}
+@keyframes bracketSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.target-brackets::before, .target-brackets::after {
+  content: ""; position: absolute; inset: 0;
+  border: 1px solid rgba(0,245,255,0.2);
+  clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px);
+}
+.target-brackets::after {
+  inset: 20px; border-color: rgba(255,0,204,0.2);
+  animation: bracketSpin2 12s linear infinite reverse;
+  clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+}
+@keyframes bracketSpin2 { to { transform: rotate(360deg); } }
+
+.crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; pointer-events: none; }
+.crosshair::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), rgba(0,245,255,0.8), rgba(0,245,255,0.3), transparent); transform: translateY(-50%); }
+.crosshair::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: linear-gradient(180deg, transparent, rgba(0,245,255,0.3), rgba(0,245,255,0.8), rgba(0,245,255,0.3), transparent); transform: translateX(-50%); }
+
+.hud-hline { position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--border-c) 15%, var(--border-c) 85%, transparent 100%); }
+.hud-hline.top { top: 63px; }
+.hud-hline.bot { bottom: 155px; }
+
+.hud-vline { position: absolute; top: 64px; bottom: 156px; width: 1px; background: linear-gradient(180deg, transparent 0%, var(--border-c) 10%, var(--border-c) 90%, transparent 100%); }
+.hud-vline.left  { left: 290px; }
+.hud-vline.right { right: 290px; }
+
+/* ══ NAVBAR ════════════════════════════════════════════════════ */
+.main-nav {
+  position: fixed; top: 12px; left: 12px; right: 12px;
+  height: var(--nav-h); z-index: 999;
+  background: linear-gradient(180deg, rgba(0,6,15,0.95) 0%, rgba(0,6,15,0.7) 100%);
+  border-bottom: 1px solid var(--border-c);
+  box-shadow: 0 1px 0 rgba(0,245,255,0.6), 0 4px 30px rgba(0,0,0,0.8);
+  backdrop-filter: blur(12px);
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 0px));
+  display: flex; align-items: center; pointer-events: auto; transition: clip-path 0.2s ease;
+}
+.main-nav::before {
+  content: ""; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.04), transparent); animation: navScan 4s linear infinite;
+}
+@keyframes navScan { to { left: 200%; } }
+
+.nav-ticker { position: absolute; top: -1px; left: 120px; right: 120px; height: 2px; overflow: hidden; }
+.nav-ticker-inner { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--green), transparent); animation: tickerMove 3s linear infinite; }
+@keyframes tickerMove { to { left: 200%; } }
+
+.nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: relative; }
+
+.btn-hud { padding: 7px 20px; font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; text-decoration: none; cursor: pointer; transition: all 0.25s var(--ease); position: relative; border: none; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+.btn-hud.outline { background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan); box-shadow: inset 0 0 10px rgba(0,245,255,0.05), var(--glow-c); }
+.btn-hud.outline:hover { background: rgba(0,245,255,0.12); box-shadow: inset 0 0 20px rgba(0,245,255,0.1), var(--glow-c); }
+.btn-hud.outline.mag { background: rgba(255,0,204,0.05); border: 1px solid var(--magenta); color: var(--magenta); box-shadow: inset 0 0 10px rgba(255,0,204,0.05), var(--glow-m); }
+.btn-hud.outline.mag:hover { background: rgba(255,0,204,0.12); box-shadow: inset 0 0 20px rgba(255,0,204,0.1), var(--glow-m); }
+.btn-hud.toggle-active { background: rgba(0,255,136,0.15); border-color: var(--green); color: var(--green); box-shadow: var(--glow-g); }
+
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-bracket { color: var(--cyan); font-size: 1.4rem; font-weight: 900; text-shadow: var(--glow-c); transition: all 0.3s var(--ease); }
+.logo-text { font-family: var(--orb); font-size: 1.3rem; font-weight: 900; letter-spacing: 6px; color: #fff; text-shadow: 0 0 10px rgba(0,245,255,0.5), 0 0 30px rgba(0,245,255,0.2); text-transform: uppercase; transition: all 0.3s var(--ease); }
+
+.center-logo { transition: all 0.3s var(--ease); }
+.center-logo:hover .logo-bracket { color: #fff; text-shadow: 0 0 10px #fff; }
+.center-logo:hover .logo-text { color: var(--cyan); text-shadow: var(--glow-c); }
+
+.nav-controls { display: flex; align-items: center; gap: 12px; }
+
+/* ══ EXPANDABLE MENU SIDE PANELS ══════════════════════════════ */
+.side-panel { 
+    position: fixed; 
+    z-index: 10; 
+    pointer-events: auto; 
+    background: linear-gradient(135deg, rgba(0,15,35,0.72) 0%, rgba(0,5,15,0.88) 100%); 
+    border: 1px solid var(--border-c); 
+    backdrop-filter: blur(16px); 
+    padding: 20px 18px; 
+    width: 270px; 
+    box-shadow: inset 0 0 30px rgba(0,245,255,0.03), 0 8px 32px rgba(0,0,0,0.7); 
+    background-image: linear-gradient(rgba(0,245,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.06) 1px, transparent 1px); 
+    background-size: 20px 20px; 
+    top: 90px; 
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 0.4s var(--ease), opacity 0.4s var(--ease), visibility 0.4s;
+}
+.side-panel::-webkit-scrollbar { display: none; }
+
+.side-panel.left { 
+    left: 28px; 
+    clip-path: polygon(16px 0, 100% 0, 100% 100%, 0 100%, 0 16px); 
+    border-left: 2px solid var(--cyan); 
+    box-shadow: -4px 0 20px rgba(0,245,255,0.1), inset 0 0 30px rgba(0,245,255,0.03), 0 8px 32px rgba(0,0,0,0.7); 
+    transform: translateX(-150%);
+}
+.side-panel.right { 
+    right: 28px; 
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); 
+    border-right: 2px solid var(--magenta); 
+    border-color: var(--border-m); 
+    box-shadow: 4px 0 20px rgba(255,0,204,0.1), inset 0 0 30px rgba(255,0,204,0.03), 0 8px 32px rgba(0,0,0,0.7); 
+    transform: translateX(150%);
+}
+
+.side-panel.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.panel-title { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--cyan); text-transform: uppercase; font-weight: 700; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,245,255,0.2); display: flex; align-items: center; gap: 8px; }
+.panel-title.mag { color: var(--magenta); border-color: rgba(255,0,204,0.2); }
+.panel-title.grn { color: var(--green); border-color: rgba(0,255,136,0.2); }
+.panel-title-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: var(--glow-c); flex-shrink: 0; animation: dotBlink 2s ease-in-out infinite; }
+.panel-title-dot.mag { background: var(--magenta); box-shadow: var(--glow-m); }
+.panel-title-dot.grn { background: var(--green); box-shadow: var(--glow-g); }
+@keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.data-row { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 9px; padding: 5px 0; border-bottom: 1px solid rgba(0,245,255,0.05); color: rgba(0,245,255,0.5); letter-spacing: 1px; text-transform: uppercase; }
+.data-row:last-child { border-bottom: none; }
+.data-val { color: #fff; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 6px rgba(0,245,255,0.4); }
+.data-val.mag { color: var(--magenta); text-shadow: 0 0 6px rgba(255,0,204,0.4); }
+.data-val.grn { color: var(--green); text-shadow: 0 0 6px rgba(0,255,136,0.4); }
+
+.data-val-link { color: inherit; text-decoration: none; transition: text-shadow 0.2s, color 0.2s; }
+.data-val-link:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+
+.seg-bar-wrap { margin: 12px 0 4px; }
+.seg-label { font-family: var(--mono); font-size: 8px; letter-spacing: 2px; color: rgba(0,245,255,0.5); text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.seg-bar { display: flex; gap: 2px; height: 8px; }
+.seg { flex: 1; background: rgba(0,245,255,0.08); height: 100%; transition: background 0.3s; }
+.seg.on { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.seg.on.mag { background: var(--magenta); box-shadow: 0 0 6px var(--magenta); }
+.seg.on.grn { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.seg.pulse { animation: segPulse 1.5s ease-in-out infinite; }
+@keyframes segPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.p-div { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent); margin: 12px 0; }
+.p-div.mag { background: linear-gradient(90deg, transparent, rgba(255,0,204,0.3), transparent); }
+
+.legend { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 8px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; }
+.legend-gem { width: 8px; height: 8px; transform: rotate(45deg); flex-shrink: 0; }
+.legend-gem.c { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); outline: 1px solid rgba(0,245,255,0.4); outline-offset: 2px; }
+.legend-gem.m { background: var(--magenta); box-shadow: 0 0 8px var(--magenta); outline: 1px solid rgba(255,0,204,0.4); outline-offset: 2px; }
+.legend-gem.g { background: var(--green); box-shadow: 0 0 8px var(--green); outline: 1px solid rgba(0,255,136,0.4); outline-offset: 2px; }
+
+/* ══ BOTTOM STATUS BAR ════════════════════════════════════════ */
+.status-bar { position: absolute; bottom: 168px; left: 28px; right: 28px; z-index: 10; pointer-events: none; display: flex; justify-content: space-between; align-items: center; }
+.status-item { font-family: var(--mono); font-size: 8px; letter-spacing: 2px; color: rgba(0,245,255,0.4); text-transform: uppercase; }
+.status-item span { color: var(--cyan); }
+.status-item.active span { animation: textFlicker 3s linear infinite; }
+@keyframes textFlicker { 0%,98%,100%{opacity:1} 99%{opacity:0.1} }
+
+/* ══ LOADING SCREEN ═══════════════════════════════════════════ */
+#loading { position: fixed; inset: 0; z-index: 9999; background: var(--black); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1.2s var(--ease); background-image: linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px); background-size: 40px 40px; }
+.ld-outer { position: relative; padding: 60px 80px; border: 1px solid var(--border-c); clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px); background: rgba(0,8,20,0.8); backdrop-filter: blur(20px); box-shadow: 0 0 60px rgba(0,245,255,0.08), inset 0 0 40px rgba(0,245,255,0.03); }
+.ld-corner { position: absolute; width: 20px; height: 20px; border-color: var(--cyan); border-style: solid; box-shadow: var(--glow-c); }
+.ld-corner.tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; }
+.ld-corner.tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; }
+.ld-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; }
+.ld-corner.br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; }
+.ld-tag { font-family: var(--mono); font-size: 9px; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; opacity: 0.7; }
+.ld-title { font-family: var(--orb); font-size: clamp(1.6rem, 8vw, 3rem); font-weight: 900; letter-spacing: clamp(4px, 3vw, 20px); color: #fff; text-shadow: var(--glow-c), 0 0 60px rgba(0,100,255,0.4); text-transform: uppercase; text-align: center; margin-bottom: 4px; }
+.ld-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 6px; color: rgba(0,245,255,0.5); text-align: center; text-transform: uppercase; margin-bottom: 32px; }
+.ld-bar-wrap { position: relative; width: min(480px, 90vw); }
+.ld-bar { height: 12px; background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.2); position: relative; overflow: hidden; clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
+.ld-fill { height: 100%; width: 0%; transition: width 0.15s linear; background: repeating-linear-gradient(90deg, var(--cyan) 0, var(--cyan) 6px, rgba(0,245,255,0.3) 6px, rgba(0,245,255,0.3) 8px); box-shadow: 0 0 10px var(--cyan), 0 0 20px rgba(0,245,255,0.4); }
+.ld-pct { position: absolute; right: 0; top: -20px; font-family: var(--mono); font-size: 10px; color: var(--cyan); letter-spacing: 2px; }
+.ld-step { margin-top: 16px; font-family: var(--mono); font-size: 9px; color: rgba(0,245,255,0.6); letter-spacing: 4px; text-transform: uppercase; min-height: 14px; text-align: center; }
+.ld-segs { display: flex; gap: 4px; margin-top: 20px; justify-content: center; }
+.ld-seg { width: 6px; height: 6px; border: 1px solid rgba(0,245,255,0.2); transition: all 0.3s; }
+.ld-seg.done { background: var(--cyan); box-shadow: var(--glow-c); border-color: var(--cyan); }
+
+/* ══ CSS3D RENDERED CYBER BUTTON ════════════════════════════════ */
+.center-login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-button-container {
+  perspective: 1000px;
+  padding: 30px; 
+}
+
+.cyber-button {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.btn-layer-top {
+  position: relative;
+  display: block;
+  padding: 16px 40px;
+  background-color: #00e5ff;
+  color: #000;
+  font-family: 'Syncopate', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  transform: translateZ(12px);
+  transition: transform 0.2s, background-color 0.2s;
+  z-index: 2;
+}
+
+.btn-layer-bottom {
+  position: absolute;
+  top: 6px; left: 6px; right: -6px; bottom: -6px;
+  background-color: #005566;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  transform: translateZ(0); 
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.cyber-button:hover .btn-layer-top { background-color: #4dffff; transform: translateZ(20px); }
+.cyber-button:hover .btn-layer-bottom { top: 10px; left: 10px; right: -10px; bottom: -10px; background-color: #007788; }
+
+/* ══ MAIN CONTENT (HOME SECTION) ════════════════════════════════ */
+main#home-content {
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(180deg, rgba(0,6,15,0.85) 0%, rgba(0,3,10,0.98) 100%);
+  border-top: 1px solid var(--border-c);
+  backdrop-filter: blur(10px);
+  padding: 80px 0 40px 0;
+}
+
+.content-card {
+  background: rgba(0,15,35,0.6);
+  border: 1px solid var(--border-c);
+  border-radius: 4px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: inset 0 0 20px rgba(0,245,255,0.05);
+  backdrop-filter: blur(12px);
+}
+
+.section-heading {
+  font-family: var(--orb);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: var(--glow-c);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.section-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.feature-box {
+  background: rgba(0,10,25,0.7);
+  border: 1px solid rgba(0,245,255,0.2);
+  padding: 24px;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  transition: all 0.3s var(--ease);
+}
+.feature-box:hover {
+  border-color: var(--cyan);
+  box-shadow: var(--glow-c);
+  transform: translateY(-4px);
+}
+.feature-title { font-family: var(--orb); font-size: 1.1rem; color: var(--cyan); margin-bottom: 10px; }
+.feature-desc { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+
+/* ══ TEMPLATE CYBER-FOOTER ════════════════════════════════════ */
+.cyber-footer { 
+  position: relative; z-index: 15; pointer-events: auto; 
+  background: linear-gradient(180deg, rgba(0,8,20,0.95) 0%, rgba(0,4,12,1) 100%); 
+  border-top: 1px solid var(--border-c); backdrop-filter: blur(8px); 
+  padding: 40px 36px 20px 36px;
+  box-shadow: 0 -1px 0 rgba(0,245,255,0.2), inset 0 0 20px rgba(0,0,0,0.5); 
+}
+
+.footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.f-nav-col { display: flex; flex-direction: column; gap: 8px; min-width: 130px; }
+.f-nav-col.right { align-items: flex-end; }
+.f-link { font-family: var(--mono); font-size: 10px; font-weight: 700; color: rgba(0,245,255,0.5); text-transform: uppercase; letter-spacing: 3px; text-decoration: none; transition: all 0.25s var(--ease); }
+.f-link:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+
+.f-center { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.footer-logo { font-family: var(--orb); font-size: 2rem; font-weight: 900; letter-spacing: 12px; color: #fff; text-transform: uppercase; text-shadow: var(--glow-c); }
+.footer-logo-sub { font-family: var(--mono); font-size: 8px; letter-spacing: 4px; color: rgba(0,245,255,0.5); text-transform: uppercase; }
+
+.f-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.2), var(--cyan), rgba(0,245,255,0.2), transparent); margin-bottom: 16px; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 9px; color: rgba(255,255,255,0.4); }
+
+/* Bi-directional Scroll Reveal */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+/* Scroll mode visual status tag */
+.scroll-indicator {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-left: 4px;
+}
+
+/* ══ HOME.HTML SECTION STYLES ══════════════════════════════════ */
+main { position: relative; z-index: 10; padding-top: 120px; padding-bottom: 60px; pointer-events: none; }
+main * { pointer-events: auto; }
+section { padding: 60px 0; position: relative; z-index: 10; }
+
+.section-label { font-size: 10px; letter-spacing: 4px; color: var(--magenta); text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::before { content: ""; width: 8px; height: 8px; background: var(--magenta); box-shadow: var(--glow-m); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero { min-height: 85vh; display: flex; align-items: center; position: relative; }
+.hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 4px; font-weight: 900; margin-bottom: 24px; text-shadow: 0 0 20px rgba(0,245,255,0.5), var(--glow-c); }
+.hero p { font-size: 14px; letter-spacing: 1.5px; color: rgba(255,255,255,0.6); max-width: 700px; line-height: 1.8; margin-bottom: 32px; font-family: var(--jet); }
+
+/* Logo Strip */
+.logo-strip { padding: 24px 0; background: linear-gradient(90deg, transparent, rgba(0,245,255,0.05), transparent); border-top: 1px solid var(--border-c); border-bottom: 1px solid var(--border-c); position: relative; overflow: hidden; }
+.logo-strip::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: linear-gradient(90deg, var(--black) 0%, transparent 10%, transparent 90%, var(--black) 100%); pointer-events: none; z-index: 2; }
+.logoSwiper { width: 100%; cursor: grab; }
+.logoSwiper:active { cursor: grabbing; }
+.logoSwiper .swiper-wrapper { transition-timing-function: linear !important; }
+.logoSwiper .swiper-slide { width: max-content; display: flex; align-items: center; justify-content: center; padding-right: 48px; }
+.logoSwiper img { height: 40px; width: auto; object-fit: contain; }
+.cyan-tint { filter: brightness(0) saturate(100%) invert(80%) sepia(35%) saturate(3000%) hue-rotate(140deg) brightness(105%) contrast(105%); }
+
+/* Team Grid / Sector Cards */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px 24px; }
+.team-card-wrapper { position: relative; margin-top: 20px; }
+.team-card { position: relative; min-height: 380px; background: linear-gradient(145deg, #020a17 0%, #000 100%); border: 1px solid rgba(0, 168, 255, 0.4); clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px); cursor: pointer; transition: all 0.4s var(--ease-out); box-shadow: inset 0 0 20px rgba(0, 168, 255, 0.1); filter: drop-shadow(0 0 10px rgba(0,245,255,0.05)); }
+.team-card-wrapper:hover .team-card { border-color: #00a8ff; box-shadow: inset 0 0 30px rgba(0,168,255,0.3); transform: translateY(-5px); filter: drop-shadow(0 0 15px rgba(0,245,255,0.3)); }
+.team-card-wrapper.green-theme .team-card { border: 1px solid var(--border-g); box-shadow: inset 0 0 20px rgba(0,255,136,0.1); }
+.team-card-wrapper.green-theme:hover .team-card { border-color: var(--green); box-shadow: inset 0 0 30px rgba(0,255,136,0.3); }
+.team-card-wrapper.magenta-theme .team-card { border: 1px solid var(--border-m); box-shadow: inset 0 0 20px rgba(255,0,204,0.1); }
+.team-card-wrapper.magenta-theme:hover .team-card { border-color: var(--magenta); box-shadow: inset 0 0 30px rgba(255,0,204,0.3); }
+
+.team-card-frame { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+.team-card-frame::before { content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 4px; background: #00a8ff; box-shadow: 0 0 15px #00a8ff; }
+.team-card-frame::after { content: ''; position: absolute; right: 0; top: 15%; bottom: 15%; width: 4px; background: #00a8ff; box-shadow: 0 0 15px #00a8ff; }
+.green-theme .team-card-frame::before, .green-theme .team-card-frame::after { background: var(--green); box-shadow: var(--glow-g); }
+.magenta-theme .team-card-frame::before, .magenta-theme .team-card-frame::after { background: var(--magenta); box-shadow: var(--glow-m); }
+
+.team-card-hud { position: absolute; top: -10px; left: 20px; display: flex; align-items: center; gap: 5px; z-index: 11; transition: transform 0.4s var(--ease-out); }
+.team-card-wrapper:hover .team-card-hud { transform: translateY(-5px); }
+.team-card-hud .circle { width: 14px; height: 14px; border: 2px solid #00a8ff; border-radius: 50%; box-shadow: inset 0 0 5px #00a8ff, 0 0 5px #00a8ff; display: flex; align-items: center; justify-content: center; background: #000; }
+.team-card-hud .circle::after { content: ''; width: 4px; height: 4px; background: #00a8ff; border-radius: 50%; }
+.team-card-hud .line { width: 40px; height: 2px; background: #00a8ff; box-shadow: 0 0 5px #00a8ff; }
+.team-card-hud .tag { background: rgba(0, 168, 255, 0.15); border: 1px solid #00a8ff; padding: 2px 8px; font-size: 8px; color: #00a8ff; font-family: var(--mono); letter-spacing: 1px; box-shadow: 0 0 5px #00a8ff; text-transform: uppercase; }
+.green-theme .team-card-hud .circle { border-color: var(--green); box-shadow: inset 0 0 5px var(--green), 0 0 5px var(--green); }
+.green-theme .team-card-hud .circle::after { background: var(--green); }
+.green-theme .team-card-hud .line { background: var(--green); box-shadow: var(--glow-g); }
+.green-theme .team-card-hud .tag { background: rgba(0,255,136,0.1); border-color: var(--green); color: var(--green); box-shadow: 0 0 5px var(--green); }
+.magenta-theme .team-card-hud .circle { border-color: var(--magenta); box-shadow: inset 0 0 5px var(--magenta), 0 0 5px var(--magenta); }
+.magenta-theme .team-card-hud .circle::after { background: var(--magenta); }
+.magenta-theme .team-card-hud .line { background: var(--magenta); box-shadow: var(--glow-m); }
+.magenta-theme .team-card-hud .tag { background: rgba(255,0,204,0.1); border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 5px var(--magenta); }
+
+.team-card-inner { position: absolute; inset: 0; clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px); overflow: hidden; }
+.team-front, .team-back { position: absolute; inset: 0; transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); }
+.team-front { z-index: 2; opacity: 1; }
+.team-img { position: absolute; inset: 0; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; opacity: 0.9; transition: opacity 0.4s ease; }
+.team-img::before { content: "VISUAL_DATA_UNAVAILABLE"; font-family: var(--mono); color: rgba(0, 168, 255, 0.2); letter-spacing: 3px; font-size: 10px; position: absolute; z-index: -1; text-align: center; width: 80%; }
+.team-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(2, 12, 25, 0.95) 0%, transparent 70%); display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; }
+.team-overlay h3 { color: #fff; font-family: var(--orb); font-size: 1.5rem; text-transform: none; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.team-overlay p { color: #00a8ff; font-family: var(--jet); font-size: 13px; text-shadow: 0 0 8px rgba(0,168,255,0.6); margin: 0; }
+.green-theme .team-overlay p { color: var(--green); text-shadow: var(--glow-g); }
+.magenta-theme .team-overlay p { color: var(--magenta); text-shadow: var(--glow-m); }
+.team-back { z-index: 1; opacity: 0; background: rgba(2, 12, 25, 0.95); color: #fff; padding: 32px 24px; display: flex; flex-direction: column; transform: translateY(20px); border-radius: 0; pointer-events: none; border: 1px solid transparent; }
+.team-card-wrapper:hover .team-front { opacity: 0; pointer-events: none; }
+.team-card-wrapper:hover .team-back { opacity: 1; z-index: 3; transform: translateY(0); pointer-events: auto; }
+.team-back h3 { font-family: var(--orb); font-size: 1.5rem; color: #00a8ff; text-transform: none; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 0 8px rgba(0,168,255,0.6); }
+.green-theme .team-back h3 { color: var(--green); text-shadow: var(--glow-g); }
+.magenta-theme .team-back h3 { color: var(--magenta); text-shadow: var(--glow-m); }
+.team-back p.role { font-family: var(--jet); font-size: 13px; color: #fff; margin-bottom: 16px; font-weight: bold; }
+.team-back p.desc { font-family: var(--jet); font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+.click-more { font-family: var(--mono); font-size: 10px; font-weight: bold; color: #000; background: #00a8ff; padding: 6px 12px; border-radius: 2px; align-self: flex-start; margin-top: auto; text-transform: uppercase; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 0 8px rgba(0,168,255,0.6); }
+.green-theme .click-more { background: var(--green); box-shadow: var(--glow-g); }
+.magenta-theme .click-more { background: var(--magenta); box-shadow: var(--glow-m); }
+
+/* HUD Panels / Partner Section */
+.hud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+.hud-panel { background: transparent; border: 1px solid var(--border-c); border-top: 2px solid var(--cyan); backdrop-filter: none; padding: 32px; clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px); box-shadow: none; transition: all 0.3s var(--ease); position: relative; }
+.hud-panel::before { content: ""; position: absolute; bottom: 0; right: 0; width: 30px; height: 30px; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); opacity: 0; transition: 0.3s; }
+.hud-panel:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: inset 0 0 40px rgba(0,245,255,0.1), var(--glow-c), 0 12px 40px rgba(0,0,0,0.8); }
+.hud-panel:hover::before { opacity: 1; box-shadow: inset -10px -10px 20px rgba(0,245,255,0.2); }
+.hud-panel .icon { width: 44px; height: 44px; background: rgba(0,245,255,0.1); border: 1px solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--cyan); margin-bottom: 20px; box-shadow: var(--glow-c); clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%); }
+.hud-panel h3 { font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 10px; color: #fff; }
+.hud-panel p { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.8; letter-spacing: 1px; }
+.hud-panel .read-more { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; color: var(--cyan); text-transform: uppercase; margin-top: 20px; letter-spacing: 2px; text-decoration: none; transition: 0.2s; }
+.hud-panel .read-more:hover { text-shadow: var(--glow-c); letter-spacing: 3px; }
+
+/* Swiper Elements */
+.swiper-heading { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+.swiper-nav-btns { display: flex; gap: 12px; }
+.swiper-nav-btns button { width: 40px; height: 40px; background: rgba(0,245,255,0.05); border: 1px solid var(--cyan); color: var(--cyan); cursor: pointer; display: flex; align-items: center; justify-content: center; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); transition: 0.2s; }
+.swiper-nav-btns button:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); }
+
+.metric-slide { background: rgba(0,10,25,0.8); border: 1px solid var(--border-g); border-top: 2px solid var(--green); padding: 36px 28px; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%); transition: 0.3s; display: flex; flex-direction: column; justify-content: center; height: 100%; backdrop-filter: blur(8px); }
+.metric-slide:hover { border-color: var(--green); box-shadow: var(--glow-g); transform: translateY(-4px); }
+.metric-slide .number { font-family: var(--orb); font-size: 3rem; color: var(--green); text-shadow: var(--glow-g); margin-bottom: 8px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.metric-slide .number.counted { opacity: 1; transform: translateY(0); }
+.metric-slide .label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 3px; }
+
+.team-slide { height: 340px; border: 1px solid var(--border-m); position: relative; clip-path: polygon(16px 0, 100% 0, 100% 100%, 0 100%, 0 16px); transition: 0.3s; }
+.team-slide:hover { border-color: var(--magenta); box-shadow: var(--glow-m); transform: translateY(-4px); }
+.team-slide .team-img { width: 100%; height: 100%; background: repeating-linear-gradient(45deg, rgba(255,0,204,0.05) 0, rgba(255,0,204,0.05) 2px, transparent 2px, transparent 8px); }
+.team-slide .team-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); border-top: 1px solid rgba(255,0,204,0.3); }
+.team-slide .team-overlay h4 { color: #fff; font-size: 12px; letter-spacing: 2px; margin-bottom: 4px; text-shadow: var(--glow-m); }
+.team-slide .team-overlay p { color: var(--magenta); font-size: 9px; letter-spacing: 2px; }
+
+.swiper-pagination-bullet { background: rgba(0,245,255,0.2) !important; width: 12px !important; height: 4px !important; border-radius: 0 !important; }
+.swiper-pagination-bullet-active { background: var(--cyan) !important; box-shadow: var(--glow-c); width: 24px !important; }
+
+/* Action Cards / Final Sequence */
+.action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+.cyber-image-frame { width: 100%; min-height: 350px; background: rgba(0, 245, 255, 0.05); border: 1px solid var(--border-c); box-shadow: inset 0 0 30px rgba(0, 245, 255, 0.1); clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: all 0.3s ease; }
+.cyber-image-frame::before { font-family: var(--mono); color: rgba(0, 245, 255, 0.3); letter-spacing: 4px; font-size: 12px; position: absolute; z-index: 1; }
+.image-overlay-card { position: relative; height: 100%; text-decoration: none; display: block; }
+.image-overlay-card:hover .cyber-image-frame { border-color: var(--cyan); box-shadow: inset 0 0 40px rgba(0,245,255,0.2), var(--glow-c); transform: scale(1.02); }
+.image-overlay-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 24px 24px; background: linear-gradient(to top, rgba(0,5,15,0.95), transparent); z-index: 2; }
+.image-overlay-content h3 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; text-shadow: var(--glow-c); display: flex; justify-content: space-between; align-items: center; }
+.image-overlay-content p { font-family: var(--jet); font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; margin: 0; }
+.image-overlay-card .bi-arrow-up-right { transition: transform 0.4s var(--ease-out); display: inline-block; font-size: 1.2rem; }
+.image-overlay-card:hover .bi-arrow-up-right { transform: rotate(45deg); color: #fff; text-shadow: 0 0 10px #fff; }
+
+/* Purpose Modal (Sector Expand) */
+.purpose-modal { position: fixed; inset: 0; z-index: 9999; background: rgba(0, 5, 12, 0.35); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.3s ease; }
+.purpose-modal.active { opacity: 1; pointer-events: auto; }
+.purpose-modal-content { position: relative; max-width: 820px; width: 92%; min-height: 460px; padding: 48px; border: 1px solid var(--cyan); box-shadow: 0 0 50px rgba(0,245,255,0.25), inset 0 0 30px rgba(0,245,255,0.12); clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px); transform: translateY(20px) scale(0.96); transition: 0.3s ease; overflow-y: auto; }
+.purpose-modal.active .purpose-modal-content { transform: translateY(0) scale(1); }
+.purpose-modal-content h3 { font-size: 2rem; color: #fff; margin-bottom: 16px; text-shadow: var(--glow-c); }
+.purpose-modal-content p { font-size: 15px; line-height: 1.8; color: rgba(255,255,255,0.85); max-width: 60ch; margin-bottom: 12px; }
+#purpose-text { max-height: 300px; overflow-y: auto; padding-right: 12px; scrollbar-width: thin; }
+#purpose-text::-webkit-scrollbar { width: 4px; }
+#purpose-text::-webkit-scrollbar-thumb { background: var(--cyan); }
+.purpose-modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--cyan); font-size: 1.5rem; cursor: pointer; z-index: 5; transition: 0.2s; }
+.purpose-modal-close:hover { text-shadow: var(--glow-c); transform: scale(1.1); }
+
+/* Footer Enhanced */
+.social-row { display: flex; gap: 10px; }
+.s-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; font-size: 12px; text-decoration: none; border: 1px solid rgba(0,245,255,0.2); color: rgba(0,245,255,0.4); background: rgba(0,245,255,0.03); transition: all 0.25s var(--ease); clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%); }
+.s-icon:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-c); transform: scale(1.1) rotate(15deg); }
+.f-copy-links { display: flex; gap: 16px; }
+.f-copy-links a { color: inherit; text-decoration: none; transition: all 0.2s; text-transform: uppercase; }
+.f-copy-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+.f-year { color: var(--cyan); font-weight: 700; letter-spacing: 4px; font-size: 9px; position: absolute; left: 50%; transform: translateX(-50%); }
+.f-credit { text-transform: uppercase; }
+.f-credit span { color: var(--cyan); font-family: var(--orb); font-size: 9px; letter-spacing: 3px; text-shadow: var(--glow-c); }
+.hover-float { transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+.hover-float:hover { transform: translateY(-5px); }
+
+/* Reveal Animations */
+.reveal-section { opacity: 0; transition: opacity 0.8s ease, transform 2.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-section.from-right { transform: translateX(250px); }
+.reveal-section.from-left { transform: translateX(-250px); }
+.reveal-section.visible { opacity: 1; transform: translateX(0); }
+</style>
+</head>
+<body>
+
+<!-- UI Wrapper Layer -->
+<div id="ui-layer">
+
+    <!-- Loading Screen -->
+    <div id="loading">
+      <div class="ld-outer">
+        <div class="ld-corner tl"></div>
+        <div class="ld-corner tr"></div>
+        <div class="ld-corner bl"></div>
+        <div class="ld-corner br"></div>
+        <div class="ld-tag">// NEURAL NET INTERFACE — BOOT SEQUENCE</div>
+        <div class="ld-title">UMUZI</div>
+        <div class="ld-sub">3D HUD v4.2 — CYBERPUNK FRAMEWORK</div>
+        <div class="ld-bar-wrap">
+          <div class="ld-pct" id="ldPct">0%</div>
+          <div class="ld-bar"><div class="ld-fill" id="ldFill"></div></div>
+        </div>
+        <div class="ld-step" id="ldStep">INITIALIZING NEURAL CORE…</div>
+        <div class="ld-segs" id="ldSegs">
+          <div class="ld-seg" id="ls0"></div><div class="ld-seg" id="ls1"></div>
+          <div class="ld-seg" id="ls2"></div><div class="ld-seg" id="ls3"></div>
+          <div class="ld-seg" id="ls4"></div><div class="ld-seg" id="ls5"></div>
+          <div class="ld-seg" id="ls6"></div><div class="ld-seg" id="ls7"></div>
+          <div class="ld-seg" id="ls8"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION BAR -->
+    <nav class="main-nav" id="mainNav">
+      <div class="nav-ticker"><div class="nav-ticker-inner"></div></div>
+      <div class="nav-inner">
+        <!-- Left Sci-Fi Button Toggle -->
+        <button class="btn-hud outline" id="btn-sym-specs">SYM · Menu-001</button>
+
+        <!-- Center Nav Logo -->
+        <a href="#hero-section" class="nav-logo center-logo" style="position: absolute; left: 50%; transform: translateX(-50%);">
+          <span class="logo-bracket">[</span>
+          <div class="logo-text">Umuzi</div>
+          <span class="logo-bracket">]</span>
+        </a>
+
+        <!-- Controls: Change Scroll & Right Menu Toggle -->
+        <div class="nav-controls">
+          <!-- CHANGE SCROLL BUTTON -->
+          <button class="btn-hud outline" id="btn-change-scroll" title="Toggle between 3D Zoom and Page Scroll">
+            <i class="bi bi-arrows-expand"></i> Change Scroll <span class="scroll-indicator" id="scroll-mode-text">[ZOOM 3D]</span>
+          </button>
+          
+          <button class="btn-hud outline mag" id="btn-who-we-are">SYM · Menu-002</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- LEFT SIDE PANEL -->
+    <div class="side-panel left">
+      <div class="panel-title"><div class="panel-title-dot"></div>SYM · Menu-001</div>
+      <div class="data-row"><span>ADMIN</span><span class="data-val"><a href="loginPage.html" class="data-val-link">login</a></span></div>
+      <div class="data-row"><span>Donate</span><span class="data-val"><a href="donate.html" class="data-val-link">give</a></span></div>
+      <div class="data-row"><span>Contact</span><span class="data-val"><a href="contact.html" class="data-val-link">reach</a></span></div>
+      <div class="data-row"><span>Privacy</span><span class="data-val grn"><a href="privacy-policy.html" class="data-val-link">terms</a></span></div>
+      <div class="p-div"></div>
+      <div class="seg-bar-wrap">
+        <div class="seg-label"><span>Platform Load</span><span id="nlPct">78%</span></div>
+        <div class="seg-bar" id="nlBar"></div>
+      </div>
+      <div class="seg-bar-wrap">
+        <div class="seg-label"><span>Network Sync</span><span id="srPct">92%</span></div>
+        <div class="seg-bar" id="srBar"></div>
+      </div>
+      <div class="seg-bar-wrap">
+        <div class="seg-label"><span>Data Flux</span><span id="dfPct">45%</span></div>
+        <div class="seg-bar" id="dfBar"></div>
+      </div>
+      <div class="p-div"></div>
+      <div class="panel-title" style="margin-top:4px;"><div class="panel-title-dot grn"></div>MODULES</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-gem c"></div><a href="#hero-section" class="data-val-link">00 - Hero HUD</a></div>
+        <div class="legend-item"><div class="legend-gem c"></div><a href="#home-content" class="data-val-link">01 - Overview</a></div>
+        <div class="legend-item"><div class="legend-gem m"></div><a href="#pathways" class="data-val-link">02 - Pathways</a></div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE PANEL -->
+    <div class="side-panel right">
+      <div class="panel-title mag"><div class="panel-title-dot mag"></div>SYM · Menu-002</div>
+      <div class="panel-title mag"><div class="panel-title-dot mag"></div>WHO WE ARE</div>
+      <div class="data-row"><span>Our People</span><span class="data-val mag"><a href="our-people.html" class="data-val-link">meet</a></span></div>
+      <div class="data-row"><span>Our Story</span><span class="data-val"><a href="our-story.html" class="data-val-link">read</a></span></div>
+      <div class="data-row"><span>Careers</span><span class="data-val"><a href="careers.html" class="data-val-link">explore</a></span></div>
+      <div class="p-div mag"></div>
+      <div class="panel-title mag"><div class="panel-title-dot mag"></div>INSIGHTS</div>
+      <div class="data-row"><span>Articles</span><span class="data-val mag"><a href="blog.html" class="data-val-link">read</a></span></div>
+      <div class="data-row"><span>Impact</span><span class="data-val"><a href="insights.html" class="data-val-link">view</a></span></div>
+    </div>
+
+    <!-- HERO SECTION (LANDING PAGE 3D ENVIRONMENT) -->
+    <section id="hero-section">
+      <div class="hud-frame">
+        <div class="hud-frame__outer"></div>
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+        <div class="target-brackets"></div>
+        <div class="crosshair"></div>
+        <div class="hud-hline top"></div>
+        <div class="hud-hline bot"></div>
+        <div class="hud-vline left"></div>
+        <div class="hud-vline right"></div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-item active">SYS_STATUS: <span id="sysStatus">ONLINE</span></div>
+        <div class="status-item">NODES: <span>247 / 256</span></div>
+        <div class="status-item">UPTIME: <span id="uptime">00:00:00</span></div>
+        <div class="status-item">LAT: <span>2.4ms</span></div>
+        <div class="status-item active">NEURAL_SYNC: <span>ACTIVE</span></div>
+      </div>
+
+      <!-- 3D Canvas -->
+      <canvas id="three-canvas"></canvas>
+
+      <!-- 3D Login Button Anchor -->
+      <div id="login3DContainer" class="center-login-container">
+        <div class="cyber-button-container">
+          <a href="loginPage.html" style="text-decoration: none; display: block;">
+            <button class="cyber-button" id="loginSeqBtn" type="button">
+              <span class="btn-layer-bottom"></span>
+              <span class="btn-layer-top">LOGIN SEQUENCE</span>
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+
+</div> <!-- End UI Layer -->
+
+<!-- HOME CONTENT SECTION -->
+<main>
+    <section class="hero" style="background-image: url('assets/Images/home-cover.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+      <div class="container">
+        <h1>A global community<br>enabling human potential</h1>
+        <p>>_ We collaborate with global partners to create learning-to-earning pathways that serve people, communities and the planet in a way that shapes a more sustainable future. INITIALIZING PROTOCOLS...</p>
+        <a href="who-we-are.html" class="btn-hud outline" style="font-size: 12px; padding: 12px 30px;">Learn more <i class="bi bi-arrow-up-right"></i></a>
+      </div>
+    </section>
+
+    <!-- DRAGGABLE CONTINUOUS AUTO-SLIDER LOGO STRIP -->
+    <div class="logo-strip">
+      <div class="swiper logoSwiper">
+        <div class="swiper-wrapper">
+          <!-- The CSS filter .cyan-tint converts these white logos to Umuzi Cyan #00f5ff -->
+          <div class="swiper-slide"><img src="assets/Images/Unicef Logo.png" class="cyan-tint" alt="UNICEF Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/sap logo.png" class="cyan-tint" alt="SAP Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/yoma logo.png" class="cyan-tint" alt="Yoma Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Botnar logo.png" class="cyan-tint" alt="Fondation Botnar Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/GenU Logo.png" class="cyan-tint" alt="Generation Unlimited Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/giz logo.png" class="cyan-tint" alt="GIZ Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Naspers logo.png" class="cyan-tint" alt="Naspers Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/IDC logo.png" class="cyan-tint" alt="IDC Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/BBD.png" class="cyan-tint" alt="BBD Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Capitec Bank Logo.png" class="cyan-tint" alt="Capitec Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Sanofi logo.png" class="cyan-tint" alt="Sanofi Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/coursera logo.png" class="cyan-tint" alt="Coursera Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Old Mutual logo.png" class="cyan-tint" alt="Old Mutual Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/VML logo.png" class="cyan-tint" alt="VML Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/sanlam logo.png" class="cyan-tint" alt="Sanlam Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/_Equal experts logo.png" class="cyan-tint" alt="Equal Experts Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/Kariega logo.png" class="cyan-tint" alt="Kariega Foundation Logo"></div>
+          <div class="swiper-slide"><img src="assets/Images/collectivex logo.png" class="cyan-tint" alt="Collective_X Logo"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRATEGIC GROWTH SECTORS -->
+    <section class="reveal-section from-right">
+      <div class="container">
+        <div class="section-label">DIR // FOCUS_AREAS</div>
+        <h2 class="section-heading">Strategic Growth Sectors</h2>
+        <p class="section-sub">We focus on building skills, developing experience and creating opportunities across five key tactical domains.</p>
+       
+        <div class="team-grid">
+          
+          <!-- Sector: Digital -->
+          <div class="team-card-wrapper sector-trigger" data-id="SEC_DIGITAL" style="transition-delay: 0.1s;">
+              <div class="team-card-hud">
+                  <div class="circle"></div><div class="line"></div><div class="tag">SEC: 01</div>
+              </div>
+              <div class="team-card">
+                  <div class="team-card-frame"></div>
+                  <div class="team-card-inner">
+                      <div class="team-front">
+                          <div class="team-img" style="background-image: url('assets/Images/digital.png');"></div>
+                          <div class="team-overlay">
+                              <h3>Digital</h3>
+                              <p>Powering Africa's digital economy</p>
+                          </div>
+                      </div>
+                      <div class="team-back">
+                          <h3>Digital</h3>
+                          <p class="role">Skills Pathway</p>
+                          <p class="desc">We're building the next generation of coders, designers, and data talent to power Africa's digital economy. Immersive training aligned with real market needs.</p>
+                          <div class="click-more">Expand Sector <i class="bi bi-arrows-fullscreen"></i></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sector: Green (Green Theme) -->
+          <div class="team-card-wrapper green-theme sector-trigger" data-id="SEC_GREEN" style="transition-delay: 0.2s;">
+              <div class="team-card-hud">
+                  <div class="circle"></div><div class="line"></div><div class="tag">SEC: 02</div>
+              </div>
+              <div class="team-card">
+                  <div class="team-card-frame"></div>
+                  <div class="team-card-inner">
+                      <div class="team-front">
+                          <div class="team-img" style="background-image: url('assets/Images/Green.png');"></div>
+                          <div class="team-overlay">
+                              <h3>Green</h3>
+                              <p>Catalyzing inclusive economic growth</p>
+                          </div>
+                      </div>
+                      <div class="team-back">
+                          <h3>Green</h3>
+                          <p class="role">Enterprise Support</p>
+                          <p class="desc">We support entrepreneurs building businesses that improve environmental sustainability. Catalyzing job creation within the green economy.</p>
+                          <div class="click-more">Expand Sector <i class="bi bi-arrows-fullscreen"></i></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sector: Logistics (Magenta Theme) -->
+          <div class="team-card-wrapper magenta-theme sector-trigger" data-id="SEC_LOGISTICS" style="transition-delay: 0.3s;">
+              <div class="team-card-hud">
+                  <div class="circle"></div><div class="line"></div><div class="tag">SEC: 03</div>
+              </div>
+              <div class="team-card">
+                  <div class="team-card-frame"></div>
+                  <div class="team-card-inner">
+                      <div class="team-front">
+                          <div class="team-img" style="background-image: url('assets/Images/Logistics.png');"></div>
+                          <div class="team-overlay">
+                              <h3>Logistics</h3>
+                              <p>Township connectors & delivery routes</p>
+                          </div>
+                      </div>
+                      <div class="team-back">
+                          <h3>Logistics</h3>
+                          <p class="role">Ecosystem Infrastructure</p>
+                          <p class="desc">Training young people as township connectors: last-mile delivery entrepreneurs moving goods securely between ecosystem members.</p>
+                          <div class="click-more">Expand Sector <i class="bi bi-arrows-fullscreen"></i></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sector: Agriculture -->
+          <div class="team-card-wrapper sector-trigger" data-id="SEC_AGRICULTURE" style="transition-delay: 0.1s;">
+              <div class="team-card-hud">
+                  <div class="circle"></div><div class="line"></div><div class="tag">SEC: 04</div>
+              </div>
+              <div class="team-card">
+                  <div class="team-card-frame"></div>
+                  <div class="team-card-inner">
+                      <div class="team-front">
+                          <div class="team-img" style="background-image: url('assets/Images/Agriculture.png');"></div>
+                          <div class="team-overlay">
+                              <h3>Agriculture</h3>
+                              <p>Sustainable agri-entrepreneurs</p>
+                          </div>
+                      </div>
+                      <div class="team-back">
+                          <h3>Agriculture</h3>
+                          <p class="role">Enterprise Support</p>
+                          <p class="desc">Empowering agri-entrepreneurs from ideation to scale. Technical, business, and digital capabilities mapping to the evolving agri-economy.</p>
+                          <div class="click-more">Expand Sector <i class="bi bi-arrows-fullscreen"></i></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Sector: Care (Magenta Theme) -->
+          <div class="team-card-wrapper magenta-theme sector-trigger" data-id="SEC_CARE" style="transition-delay: 0.2s;">
+              <div class="team-card-hud">
+                  <div class="circle"></div><div class="line"></div><div class="tag">SEC: 05</div>
+              </div>
+              <div class="team-card">
+                  <div class="team-card-frame"></div>
+                  <div class="team-card-inner">
+                      <div class="team-front">
+                          <div class="team-img" style="background-image: url('assets/Images/care.png');"></div>
+                          <div class="team-overlay">
+                              <h3>Care</h3>
+                              <p>Structured learning-to-earning models</p>
+                          </div>
+                      </div>
+                      <div class="team-back">
+                          <h3>Care</h3>
+                          <p class="role">Early Childhood Development</p>
+                          <p class="desc">Equipping Early Childhood Development practitioners with structured learning-to-earning models. Moving from skills to dignified enterprise.</p>
+                          <div class="click-more">Expand Sector <i class="bi bi-arrows-fullscreen"></i></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OTHER SECTIONS -->
+    <section id="partner" class="reveal-section from-left" style="background: rgba(0, 5, 12, 0.6); border-top: 1px solid var(--border-c); border-bottom: 1px solid var(--border-c);">
+      <div class="container">
+        <div class="hud-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <div class="hud-panel">
+            <div class="icon" style="border-radius: 50%;"><i class="bi bi-cpu"></i></div>
+            <h3>The future of work is shifting.</h3>
+            <p>We work with bold organizations leading the change. From hiring work-ready talent to curating learning-to-earning pathways, our partnerships shift systems.</p>
+            <a href="partner-with-us.html" class="read-more">Partner with us <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+          <div class="hud-panel">
+            <div class="icon" style="border-radius: 50%; color:var(--magenta); border-color:var(--magenta); box-shadow:var(--glow-m);"><i class="bi bi-mortarboard"></i></div>
+            <h3>Next-gen leaders.</h3>
+            <p>Our pathways are designed to grow skills, bolster experience and open meaningful doors. A community that supports you every step.</p>
+            <a href="community.html" class="read-more" style="color:var(--magenta);">Learn with us <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+          <div class="hud-panel">
+            <div class="icon" style="border-radius: 50%; color:var(--green); border-color:var(--green); box-shadow:var(--glow-g);"><i class="bi bi-gift"></i></div>
+            <h3>The future is built together.</h3>
+            <p>Social capital is at the heart of operations. Work with philanthropic funders to create inclusive, high-value earning opportunities.</p>
+            <a href="donate.html" class="read-more" style="color:var(--green);">Donate <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="impact" class="reveal-section from-right">
+      <div class="container">
+        <div class="swiper-heading">
+          <div>
+            <div class="section-label" style="color:var(--green);">TELEMETRY // IMPACT</div>
+            <h2 class="section-heading">Impact + Reach</h2>
+          </div>
+          <div class="swiper-nav-btns">
+            <button class="metrics-prev"><i class="bi bi-chevron-left"></i></button>
+            <button class="metrics-next"><i class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="swiper metricsSwiper" style="overflow:visible;">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">10 526</div><div class="label">ACTIVE NODES (2025)</div></div></div>
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">44k+</div><div class="label">APPLICANT PINGS</div></div></div>
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">6 900+</div><div class="label">ALUMNI GLOBALLY</div></div></div>
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">52</div><div class="label">EMPLOYER UPLINKS</div></div></div>
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">13+</div><div class="label">SKILL PATHWAYS</div></div></div>
+            <div class="swiper-slide"><div class="metric-slide"><div class="number">4 350+</div><div class="label">OPPORTUNITIES UNLOCKED</div></div></div>
+          </div>
+          <div class="swiper-pagination" style="position:relative;margin-top:24px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal-section from-left">
+      <div class="container">
+        <div class="swiper-heading">
+          <div>
+            <div class="section-label" style="color:var(--magenta);">DB // PERSONNEL</div>
+            <h2 class="section-heading">Team shaping tomorrow</h2>
+          </div>
+          <div class="swiper-nav-btns">
+            <button class="team-prev" style="color:var(--magenta); border-color:var(--magenta);"><i class="bi bi-chevron-left"></i></button>
+            <button class="team-next" style="color:var(--magenta); border-color:var(--magenta);"><i class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="swiper teamSwiper" style="overflow:visible;">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/LYNDI\ LAWSON-SMITH.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Lyndi Lawson-Smith</h4><p>CEO</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/NDUDUZO\ NYANDA.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Nduduzo Nyanda</h4><p>Head of Launch Lab</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/FIONA\ TABRAHAM.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Fiona Tabraham</h4><p>Chief Commercial Officer</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Mutinta\ Simelane.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Mutinta Simelane</h4><p>Community Lead</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Hloni\ Letuka.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Hloni Letuka</h4><p>Operations Lead</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Rivoningo Maphophe.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Rivoningo Maphophe</h4><p>YOMA Project Manager</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Ngoako Ramokgopa.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Ngoako Ramokgopa</h4><p>Software Developer</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Itumeleng Lentsoane.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Itumeleng Lentsoane</h4><p>Project Manager</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Letsiwe Nhlapo.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Letsiwe Nhlapo</h4><p>Junior Community Project Manager</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Sekgomotso Shalang.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Sekgomotso Shalang</h4><p>Junior Data Analyst</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Samantha Hampton.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Samantha Hampton</h4><p>Data Lead</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Demetri Govender.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Demetri Govender</h4><p>Learner Selection + Matching Intern</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Bongiwe Msibi.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Bongiwe Msibi</h4><p>Learner Experience Coach</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Themba Ntuli.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Themba Ntuli</h4><p>Junior Software Developer</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Aphiwe Tomose.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Aphiwe Tomose</h4><p>Administrative Assistant</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Kholofelo Mashego.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Kholofelo Mashego</h4><p>Partner &amp; Business Development Manager</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Mark Ngendo.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Mark Ngendo</h4><p>Data Scientist</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Muzi Maphophe.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Muzi Maphophe</h4><p>Learner Experience Coach</p></div></div></div>
+            <div class="swiper-slide"><div class="team-slide"><div class="team-img" style="background-image: url('assets/Images/Brett Ganga.png'); background-size: cover; background-position: center;"></div><div class="team-overlay"><h4>Brett Ganga</h4><p>Placements Lead</p></div></div></div>
+          </div>
+          <div class="swiper-pagination" style="position:relative;margin-top:24px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal-section from-right" style="text-align:center; padding-bottom: 20px;">
+      <div class="container">
+        <h2 class="section-heading" style="font-size: 2rem;">Execute Final Sequence</h2>
+        <p class="section-sub" style="margin:0 auto 30px;">Join us in building a future where potential meets purpose.</p>
+        
+        <div class="action-grid">
+          <a href="apply-now.html" class="image-overlay-card reveal" style="transition-delay: 0.1s;">
+            <div class="cyber-image-frame" style="min-height: 350px; background-image: url('assets/Images/Apply.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3>Apply <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+
+          <a href="partner-with-us.html" class="image-overlay-card reveal" style="transition-delay: 0.2s;">
+            <div class="cyber-image-frame" style="min-height: 350px; border-color: var(--green); box-shadow: inset 0 0 30px rgba(0,255,136,0.1); background-image: url('assets/Images/Partner.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3 style="color: var(--green); text-shadow: var(--glow-g);">Partner <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+
+          <a href="donate.html" class="image-overlay-card reveal" style="transition-delay: 0.3s;">
+            <div class="cyber-image-frame" style="min-height: 350px; border-color: var(--magenta); box-shadow: inset 0 0 30px rgba(255,0,204,0.1); background-image: url('assets/Images/Donate.png'); background-size: cover; background-position: center;">
+              <div class="image-overlay-content">
+                <h3 style="color: var(--magenta); text-shadow: var(--glow-m);">Donate <i class="bi bi-arrow-up-right" style="font-size: 1rem;"></i></h3>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cyber-footer" style="pointer-events:auto;">
+    <div class="footer-top">
+      <div class="f-nav-col">
+        <a href="careers.html" class="f-link" data-text="CAREERS">CAREERS</a>
+        <a href="community.html" class="f-link" data-text="LEARNERS">LEARNERS</a>
+        <a href="who-we-are.html" class="f-link" data-text="ABOUT">ABOUT</a>
+      </div>
+
+      <div class="f-center">
+        <div class="footer-logo hover-float">UMUZI</div>
+        <div class="footer-logo-sub">// Creating learning-to-earning pathways that serve people.</div>
+        <div class="social-row">
+          <a href="#" class="s-icon"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="s-icon"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+
+      <div class="f-nav-col right">
+        <a href="partner-with-us.html" class="f-link" data-text="PARTNERS">PARTNERS</a>
+        <a href="our-impact.html" class="f-link" data-text="IMPACT">IMPACT</a>
+        <a href="contact.html" class="f-link" data-text="CONTACT">CONTACT</a>
+      </div>
+    </div>
+
+    <div class="f-divider"></div>
+
+    <div class="footer-bottom">
+      <div class="f-copy-links">
+        <a href="privacy-policy.html">Privacy Policy & PAIA</a>
+        <a href="cookie-policy.html">Cookie Settings</a>
+        <a href="privacy-policy.html">Terms</a>
+      </div>
+      <div class="f-year">[2026]</div>
+      <div class="f-credit">Designed by <span>SNM</span></div>
+    </div>
+  </footer>
+
+<!-- External Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════
+//  LOADING SEQUENCE
+// ══════════════════════════════════════════════════════════════
+const STEPS = [
+  'BOOTING NEURAL CORE…', 'MAPPING CIRCUIT GRID…', 'DRAWING KNOT TOPOLOGY…',
+  'SWEEPING RIBBON PATHS…', 'RADIAL ARRAY: 6 SEGMENTS…', 'BOOLEAN INTERLACE…',
+  'BEVELLING EDGES R0.3mm…', 'COMPILING NEON SHADERS…', 'RENDER ENGINE READY ✓'
+];
+let stepIdx = 0;
+const ldFill = document.getElementById('ldFill');
+const ldStep = document.getElementById('ldStep');
+const ldPct  = document.getElementById('ldPct');
+
+function nextStep() {
+  if (stepIdx < STEPS.length) {
+    const pct = Math.round((stepIdx + 1) / STEPS.length * 100);
+    if(ldFill) ldFill.style.width = pct + '%';
+    if(ldPct) ldPct.textContent  = pct + '%';
+    if(ldStep) ldStep.textContent = STEPS[stepIdx];
+    const seg = document.getElementById('ls' + stepIdx);
+    if (seg) seg.classList.add('done');
+    stepIdx++;
+  }
+}
+
+let loadInterval = setInterval(() => {
+    if (stepIdx < STEPS.length - 1) { 
+        nextStep();
+    }
+}, 150);
+
+window.addEventListener('load', () => {
+  clearInterval(loadInterval);
+  while (stepIdx < STEPS.length) {
+    nextStep();
+  }
+  
+  setTimeout(() => {
+    const ld = document.getElementById('loading');
+    if (ld) {
+        ld.style.opacity = '0';
+        setTimeout(() => ld.remove(), 1200);
+    }
+    animate();
+  }, 500); 
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SIDE PANEL TOGGLE LOGIC
+// ══════════════════════════════════════════════════════════════
+const btnSymSpecs = document.getElementById('btn-sym-specs');
+const btnWhoWeAre = document.getElementById('btn-who-we-are');
+const panelLeft = document.querySelector('.side-panel.left');
+const panelRight = document.querySelector('.side-panel.right');
+
+if (btnSymSpecs && panelLeft) {
+    btnSymSpecs.addEventListener('click', () => panelLeft.classList.toggle('open'));
+}
+if (btnWhoWeAre && panelRight) {
+    btnWhoWeAre.addEventListener('click', () => panelRight.classList.toggle('open'));
+}
+
+// Data segment updater
+function buildSegBar(id, total, onCount, colorClass) {
+  const bar = document.getElementById(id);
+  if (!bar) return;
+  bar.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const s = document.createElement('div');
+    s.className = 'seg' + (i < onCount ? ' on' + (colorClass ? ' ' + colorClass : '') : '') + (i === onCount ? ' pulse' : '');
+    bar.appendChild(s);
+  }
+}
+buildSegBar('nlBar', 12, 9, '');
+buildSegBar('srBar', 12, 11, 'grn');
+buildSegBar('dfBar', 12, 5, 'mag');
+
+setInterval(() => {
+  const nl = Math.floor(6 + Math.random() * 5);
+  const sr = Math.floor(9 + Math.random() * 3);
+  const df = Math.floor(3 + Math.random() * 7);
+  if(document.getElementById('nlPct')) document.getElementById('nlPct').textContent = Math.round(nl/12*100) + '%';
+  if(document.getElementById('srPct')) document.getElementById('srPct').textContent = Math.round(sr/12*100) + '%';
+  if(document.getElementById('dfPct')) document.getElementById('dfPct').textContent = Math.round(df/12*100) + '%';
+  buildSegBar('nlBar', 12, nl, '');
+  buildSegBar('srBar', 12, sr, 'grn');
+  buildSegBar('dfBar', 12, df, 'mag');
+}, 2000);
+
+// Uptime clock
+const startTime = Date.now();
+setInterval(() => {
+  const el = document.getElementById('uptime');
+  if (!el) return;
+  const s = Math.floor((Date.now() - startTime) / 1000);
+  const hh = String(Math.floor(s / 3600)).padStart(2,'0');
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2,'0');
+  const ss = String(s % 60).padStart(2,'0');
+  el.textContent = `${hh}:${mm}:${ss}`;
+}, 1000);
+
+// ══════════════════════════════════════════════════════════════
+//  THREE.JS — WEBGL RENDERER & SCENE
+// ══════════════════════════════════════════════════════════════
+const heroSection = document.getElementById('hero-section');
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
+
+const scene = new THREE.Scene();
+scene.fog   = new THREE.FogExp2(0x000608, 0.01);
+
+const camera = new THREE.PerspectiveCamera(38, heroSection.clientWidth / heroSection.clientHeight, 0.1, 300);
+camera.position.set(0, 5, 22);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.07;
+controls.autoRotate      = true;
+controls.autoRotateSpeed = 0.4;
+controls.minDistance     = 4;
+controls.maxDistance     = 50;
+controls.target.set(0, 1, 0);
+
+// ══════════════════════════════════════════════════════════════
+//  SCROLL MODE TOGGLE SYSTEM
+// ══════════════════════════════════════════════════════════════
+let is3DZoomMode = true; // Default state: Wheel zooms 3D model
+
+const btnChangeScroll = document.getElementById('btn-change-scroll');
+const scrollModeText = document.getElementById('scroll-mode-text');
+
+function updateScrollModeUI() {
+  if (is3DZoomMode) {
+    controls.enableZoom = true;
+    scrollModeText.textContent = '[ZOOM 3D]';
+    btnChangeScroll.classList.remove('toggle-active');
+  } else {
+    controls.enableZoom = false;
+    scrollModeText.textContent = '[PAGE SCROLL]';
+    btnChangeScroll.classList.add('toggle-active');
+  }
+}
+
+if (btnChangeScroll) {
+  btnChangeScroll.addEventListener('click', () => {
+    is3DZoomMode = !is3DZoomMode;
+    updateScrollModeUI();
+  });
+}
+
+// Intercept scroll wheel over hero section when in 3D Zoom Mode
+heroSection.addEventListener('wheel', (e) => {
+  if (is3DZoomMode) {
+    e.preventDefault(); // Prevent page scroll, keep zoom active
+  }
+}, { passive: false });
+
+// ══════════════════════════════════════════════════════════════
+//  THREE.JS — CSS3D RENDERER
+// ══════════════════════════════════════════════════════════════
+const cssRenderer = new THREE.CSS3DRenderer();
+cssRenderer.setSize(heroSection.clientWidth, heroSection.clientHeight);
+cssRenderer.domElement.style.position = 'absolute';
+cssRenderer.domElement.style.inset = '0';
+cssRenderer.domElement.style.zIndex = '2'; 
+cssRenderer.domElement.style.pointerEvents = 'none'; 
+heroSection.appendChild(cssRenderer.domElement);
+
+const loginHtmlEl = document.getElementById('login3DContainer');
+const login3DObj = new THREE.CSS3DObject(loginHtmlEl);
+
+login3DObj.position.set(0, -1.72, 0); 
+login3DObj.rotation.x = Math.PI / 2; 
+login3DObj.rotation.z = 0;
+login3DObj.scale.set(0.01, 0.01, 0.01); 
+scene.add(login3DObj);
+
+window.addEventListener('resize', () => {
+  const width = heroSection.clientWidth;
+  const height = heroSection.clientHeight;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  cssRenderer.setSize(width, height); 
+});
+
+// ══════════════════════════════════════════════════════════════
+//  LIGHTING & SCENE ELEMENTS
+// ══════════════════════════════════════════════════════════════
+scene.add(new THREE.AmbientLight(0x001022, 0.8));
+function mkPt(color, intensity, x, y, z, dist) {
+  const l = new THREE.PointLight(color, intensity, dist || 60);
+  l.position.set(x, y, z);
+  scene.add(l); return l;
+}
+const lC = mkPt(0x00ffff, 4.5,  9, 10, 12);
+const lM = mkPt(0xff00ff, 3.5, -9, -4,  9);
+const lG = mkPt(0x00ff88, 2.5,  0, 12, -6);
+
+function mBody() { return new THREE.MeshStandardMaterial({ color: 0x040d18, emissive: 0x000815, roughness: 0.2, metalness: 0.95, flatShading: true }); }
+function mWire(c, o) { return new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: o || 0.18 }); }
+function addEdgeLines(geo, parent, col, op, thr) { const el = new THREE.LineSegments(new THREE.EdgesGeometry(geo, thr || 20), new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: op || 0.55 })); parent.add(el); return el; }
+
+// Circuit Floor
+const floorGrp = new THREE.Group();
+floorGrp.position.y = -1.8;
+scene.add(floorGrp);
+const matC = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.35 });
+const matM = new THREE.LineBasicMaterial({ color: 0xff00ff, transparent: true, opacity: 0.20 });
+const matG = new THREE.LineBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.25 });
+const matB = new THREE.LineBasicMaterial({ color: 0x0055ff, transparent: true, opacity: 0.30 });
+
+const SC = 0.045;
+const circuitPaths = [];
+
+function addTrace(pts, mat) {
+  const v3 = pts.map(p => new THREE.Vector3(p[0] * SC, 0, p[1] * SC));
+  floorGrp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(v3), mat));
+  circuitPaths.push({ pts: v3.map(v => v.clone()), mat });
+}
+
+const sym = [[1,1],[-1,1],[1,-1],[-1,-1]];
+sym.forEach(([sx, sz]) => {
+  addTrace([[0*sx,0*sz],[0*sx,200*sz],[0*sx,512*sz]], matC);
+  addTrace([[100*sx,0*sz],[100*sx,150*sz],[200*sx,250*sz],[200*sx,512*sz]], matB);
+  addTrace([[200*sx,0*sz],[200*sx,100*sz],[350*sx,100*sz],[350*sx,512*sz]], matC);
+  addTrace([[0*sx,100*sz],[150*sx,100*sz],[200*sx,150*sz],[300*sx,150*sz],[350*sx,200*sz],[512*sx,200*sz]], matM);
+});
+
+// Electrons
+class Electron {
+  constructor(path, speed, col) {
+    this.path = path;
+    this.t    = Math.random();
+    this.speed = speed || 0.003 + Math.random() * 0.004;
+    this.mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 6), new THREE.MeshBasicMaterial({ color: col || 0x00ffff }));
+    this.glow = new THREE.Mesh(new THREE.SphereGeometry(0.22, 6, 6), new THREE.MeshBasicMaterial({ color: col || 0x00ffff, transparent: true, opacity: 0.3, side: THREE.BackSide }));
+    this.mesh.add(this.glow);
+    floorGrp.add(this.mesh);
+  }
+  update(dt) {
+    this.t += dt * this.speed * 60;
+    if (this.t > 1) this.t = 0;
+    const pts = this.path.pts;
+    const seg = (pts.length - 1) * this.t;
+    const i   = Math.min(Math.floor(seg), pts.length - 2);
+    const f   = seg - i;
+    this.mesh.position.lerpVectors(pts[i], pts[i+1], f);
+  }
+}
+
+const electrons = [];
+circuitPaths.forEach(path => {
+  const col = path.mat === matC ? 0x00ffff : path.mat === matM ? 0xff00ff : 0x00ff88;
+  electrons.push(new Electron(path, 0.004 + Math.random() * 0.004, col));
+});
+
+// UMUZI Knot Symbol
+const KNOT_GRP = new THREE.Group();
+scene.add(KNOT_GRP);
+KNOT_GRP.position.set(0, 2.4, 0);
+
+const NEON = [0x00ffff, 0xff00ff, 0x00ff88];
+const S_knot = 0.035;
+
+function buildShape() {
+  const shape = new THREE.Shape();
+  const D = 40.0 * S_knot, Ro = 20.0 * S_knot, Ri = 10.0 * S_knot, SQRT3 = Math.sqrt(3), gap = 3.0 * S_knot;
+  const rightInnerX = Ri, rightInnerY = -Ri / SQRT3 + gap, rightOuterX = Ro, rightOuterY = (Ro - 2*Ri) / SQRT3 + gap;
+  const leftInnerX = -Ri, leftInnerY = (2*Ro + Ri) / SQRT3 + gap, leftOuterX = -Ro, leftOuterY = Ro * SQRT3 + gap;
+
+  shape.moveTo(rightOuterX, rightOuterY); shape.lineTo(rightInnerX, rightInnerY); shape.lineTo(rightInnerX, D); shape.absarc(0, D, Ri, 0, Math.PI, false);
+  shape.lineTo(leftInnerX, leftInnerY); shape.lineTo(leftOuterX, leftOuterY); shape.lineTo(leftOuterX, D); shape.absarc(0, D, Ro, Math.PI, 0, true);
+  return shape;
+}
+
+const geoKnot = new THREE.ExtrudeGeometry(buildShape(), { depth: 4.0 * S_knot, bevelEnabled: true, bevelThickness: 0.3 * S_knot, bevelSize: 0.3 * S_knot, bevelSegments: 4, curveSegments: 80 });
+
+for (let i = 0; i < 6; i++) {
+  const pivot = new THREE.Group(); pivot.rotation.z = -i * (Math.PI / 3);
+  const col = NEON[i % 3];
+  const pieceGrp = new THREE.Group(); pieceGrp.position.set(0, 0, -2.0 * S_knot);
+  pieceGrp.add(new THREE.Mesh(geoKnot, mBody()));
+  const wm = new THREE.Mesh(geoKnot, mWire(col, 0.18)); wm.scale.setScalar(1.005); pieceGrp.add(wm);
+  addEdgeLines(geoKnot, pieceGrp, col, 0.60, 20);
+  pivot.add(pieceGrp); KNOT_GRP.add(pivot);
+}
+
+// UMUZI Text 3D
+const TEXT_GRP = new THREE.Group();
+scene.add(TEXT_GRP);
+TEXT_GRP.position.set(0, -1.55, 0);
+
+const TH = 0.27, LH = 1.28, TED = 0.3;
+const BEV = { depth: TED, bevelEnabled: true, bevelThickness: 0.036, bevelSize: 0.036, bevelSegments: 4, steps: 2 };
+
+function shapeU(w=0.82) { const s = new THREE.Shape(), cx = w/2, r = w*0.3; s.moveTo(0,LH); s.lineTo(TH,LH); s.lineTo(TH,r); s.absarc(cx,r,cx-TH,Math.PI,0,false); s.lineTo(w-TH,LH); s.lineTo(w,LH); s.lineTo(w,0); s.lineTo(w-TH,0); s.absarc(cx,r,cx-TH*2,0,Math.PI,true); s.lineTo(TH,0); s.lineTo(0,0); s.closePath(); return { shape: s, w }; }
+function shapeM(w=1.06) { const s = new THREE.Shape(), mid = w/2; s.moveTo(0,0); s.lineTo(0,LH); s.lineTo(TH,LH); s.lineTo(mid,LH*0.42); s.lineTo(w-TH,LH); s.lineTo(w,LH); s.lineTo(w,0); s.lineTo(w-TH,0); s.lineTo(w-TH,LH*0.65); s.lineTo(mid+TH*0.5,LH*0.17); s.lineTo(mid-TH*0.5,LH*0.17); s.lineTo(TH,LH*0.65); s.lineTo(TH,0); s.closePath(); return { shape: s, w }; }
+function shapeZ(w=0.80) { const s = new THREE.Shape(), sl = TH*1.28; s.moveTo(0,LH); s.lineTo(w,LH); s.lineTo(w,LH-TH); s.lineTo(sl,TH); s.lineTo(w,TH); s.lineTo(w,0); s.lineTo(0,0); s.lineTo(0,TH); s.lineTo(w-sl,LH-TH); s.lineTo(0,LH-TH); s.closePath(); return { shape: s, w }; }
+function shapeI(w=0.38) { const s = new THREE.Shape(); s.moveTo(0,0); s.lineTo(0,LH); s.lineTo(w,LH); s.lineTo(w,0); s.closePath(); return { shape: s, w }; }
+
+const LETTERS = [shapeU(), shapeM(), shapeU(), shapeZ(), shapeI()];
+const KERN = 0.2;
+const totalW = LETTERS.reduce((a, l) => a + l.w, 0) + KERN * (LETTERS.length - 1);
+let xCur = -totalW / 2;
+
+LETTERS.forEach(ltr => {
+  const geo = new THREE.ExtrudeGeometry(ltr.shape, BEV);
+  const body = new THREE.Mesh(geo, mBody()); body.position.set(xCur, 0, -TED / 2); TEXT_GRP.add(body);
+  const el = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 16), new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.7 })); el.position.copy(body.position); TEXT_GRP.add(el);
+  xCur += ltr.w + KERN;
+});
+
+// Baseplate
+const bpGeo = new THREE.BoxGeometry(totalW + 1.8, 0.06, 2.6);
+const bp = new THREE.Mesh(bpGeo, new THREE.MeshStandardMaterial({ color: 0x010610, emissive: 0x00112a, roughness: 0.08, metalness: 0.99 }));
+bp.position.set(0, -1.68, 0); scene.add(bp);
+
+// ══════════════════════════════════════════════════════════════
+//  ANIMATION LOOP
+// ══════════════════════════════════════════════════════════════
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  const t  = clock.getElapsedTime();
+
+  electrons.forEach(e => e.update(dt));
+
+  KNOT_GRP.position.y = 2.4 + Math.sin(t * 0.55) * 0.18;
+  KNOT_GRP.rotation.z = Math.sin(t * 0.28) * 0.04;
+
+  controls.update();
+
+  if (camera.position.y > -1.5) {
+    loginHtmlEl.style.opacity = '0';
+    loginHtmlEl.style.pointerEvents = 'none';
+  } else {
+    loginHtmlEl.style.opacity = '1';
+    loginHtmlEl.style.pointerEvents = 'auto';
+  }
+  
+  renderer.render(scene, camera);
+  cssRenderer.render(scene, camera);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SCROLL REVEAL OBSERVER
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  updateScrollModeUI();
+  
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // Reveal-section observer (for home.html sections)
+  const revealSections = document.querySelectorAll('.reveal-section');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { rootMargin: '0px 0px -100px 0px', threshold: 0.15 });
+  revealSections.forEach(el => sectionObserver.observe(el));
+
+  // Count-up animation for metric numbers
+  const countUpObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+        const el = entry.target;
+        const raw = el.textContent.trim();
+        const hasPlus = raw.includes('+');
+        const hasK = raw.includes('k');
+        const clean = raw.replace(/[^0-9]/g, '');
+        const target = parseInt(clean, 10);
+        if (isNaN(target)) { el.classList.add('counted'); return; }
+        const duration = 2000;
+        const start = performance.now();
+        function step(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          let current = Math.round(eased * target);
+          let display = current.toLocaleString();
+          if (hasK) display += 'k';
+          if (hasPlus) display += '+';
+          el.textContent = display;
+          if (progress < 1) requestAnimationFrame(step);
+          else { el.textContent = raw; el.classList.add('counted'); }
+        }
+        requestAnimationFrame(step);
+        countUpObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.metric-slide .number').forEach(el => countUpObserver.observe(el));
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SWIPERS (logo, metrics, team)
+// ══════════════════════════════════════════════════════════════
+new Swiper('.logoSwiper', {
+  slidesPerView: 'auto',
+  spaceBetween: 0,
+  loop: true,
+  loopAdditionalSlides: 10,
+  allowTouchMove: true,
+  speed: 4000,
+  autoplay: { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: true },
+  freeMode: { enabled: true, momentum: false }
+});
+
+new Swiper('.metricsSwiper', {
+  slidesPerView: 1.1, spaceBetween: 16,
+  pagination: { el: '.metricsSwiper .swiper-pagination', clickable: true },
+  navigation: { nextEl: '.metrics-next', prevEl: '.metrics-prev' },
+  breakpoints: { 480: { slidesPerView: 2.1, spaceBetween: 20 }, 768: { slidesPerView: 3.1, spaceBetween: 24 } }
+});
+
+new Swiper('.teamSwiper', {
+  slidesPerView: 1.1, spaceBetween: 16,
+  pagination: { el: '.teamSwiper .swiper-pagination', clickable: true },
+  navigation: { nextEl: '.team-next', prevEl: '.team-prev' },
+  breakpoints: { 480: { slidesPerView: 2.1 }, 680: { slidesPerView: 3.1 }, 992: { slidesPerView: 4.1 } }
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SECTOR MODAL (purpose-modal)
+// ══════════════════════════════════════════════════════════════
+const sectorsData = {
+  'SEC_DIGITAL': { name: 'DIGITAL', rank: 'STRATEGIC GROWTH SECTOR', img: 'assets/Images/digital.png', desc: `<p>We're building the next generation of coders, designers, and data talent to power Africa's digital economy. Through immersive training programmes, industry partnerships, and placement opportunities, Umuzi equips young people with front-end and back-end web development, data science, data engineering, UX/UI design, and project management skills.</p><p>We take a demand-led approach, working closely with enterprise partners to align training with real market needs. By connecting young people with the right skills to in-demand digital roles, experience, and support, Umuzi bridges the gap between potential and opportunity, helping young people move from learning to earning while meeting the talent needs of the digital economy.</p>` },
+  'SEC_GREEN': { name: 'GREEN', rank: 'STRATEGIC GROWTH SECTOR', img: 'assets/Images/Green.png', desc: `<p>We support entrepreneurs who are building businesses that improve environmental and social sustainability while creating economic value. Umuzi aims to catalyse job creation and inclusive economic growth within South Africa's green economy by empowering small and micro enterprises from ideation to established business stage.</p><p>Through targeted business development support, enhanced capability building, and improved access to opportunities, resources, and networks, Umuzi equips green entrepreneurs to grow and sustain impact.</p>` },
+  'SEC_LOGISTICS': { name: 'LOGISTICS', rank: 'STRATEGIC GROWTH SECTOR', img: 'assets/Images/Logistics.png', desc: `<p>We work with young people and township-based delivery entrepreneurs to build inclusive, demand-led logistics enterprises that physically connect Umuzi's ecosystem. Logistics is the circulatory system of the ecosystem.</p><p>Umuzi's logistics track trains young people as township connectors: last-mile courier and delivery entrepreneurs who move food, goods, and services between ecosystem members.</p>` },
+  'SEC_AGRICULTURE': { name: 'AGRICULTURE', rank: 'STRATEGIC GROWTH SECTOR', img: 'assets/Images/Agriculture.png', desc: `<p>We work with young people and small enterprises to drive innovation, sustainability, and inclusive growth within South Africa's agricultural value chain. Umuzi empowers agri-entrepreneurs and producers from ideation to scale, equipping them with the technical, business, and digital capabilities to create livelihoods within the evolving agri-economy.</p>` },
+  'SEC_CARE': { name: 'CARE', rank: 'STRATEGIC GROWTH SECTOR', img: 'assets/Images/care.png', desc: `<p>We support young women to build dignified, sustainable livelihoods within the care economy, with a focus on Early Childhood Development (ECD). Umuzi's Care pathway equips aspiring ECD practitioners and entrepreneurs with practical care skills, business capabilities, and hands-on experience in safe, supportive learning environments.</p>` }
+};
+
+function openSectorModal(id) {
+  const data = sectorsData[id];
+  if (!data) return;
+  const modal = document.getElementById('purpose-modal');
+  const title = document.getElementById('purpose-title');
+  const text = document.getElementById('purpose-text');
+  const content = modal.querySelector('.purpose-modal-content');
+  title.textContent = data.name;
+  text.innerHTML = data.desc;
+  content.style.background = `linear-gradient(135deg, rgba(0,6,15,0.97) 60%, rgba(0,245,255,0.08)), url('${data.img}') center/cover no-repeat`;
+  modal.classList.add('active');
+}
+
+document.querySelectorAll('.sector-trigger').forEach(wrapper => {
+  wrapper.addEventListener('click', function() {
+    const id = this.dataset.id;
+    if (id) openSectorModal(id);
+  });
+});
+
+const purposeModal = document.getElementById('purpose-modal');
+const purposeCloseBtn = document.querySelector('.purpose-modal-close');
+if (purposeCloseBtn) purposeCloseBtn.addEventListener('click', () => purposeModal.classList.remove('active'));
+if (purposeModal) purposeModal.addEventListener('click', (e) => { if (e.target === purposeModal) purposeModal.classList.remove('active'); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && purposeModal && purposeModal.classList.contains('active')) purposeModal.classList.remove('active'); });
+</script>
+
+<!-- PURPOSE MODAL (Sector Expand) -->
+<div class="purpose-modal" id="purpose-modal">
+  <div class="purpose-modal-content">
+    <button class="purpose-modal-close"><i class="bi bi-x-lg"></i></button>
+    <h3 id="purpose-title"></h3>
+    <div id="purpose-text"></div>
+  </div>
+</div>
+
+</body>
+</html>
